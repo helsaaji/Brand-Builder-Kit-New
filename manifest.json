@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "PWA Template Responsif",
+  "name": "Brand Builder Kit",
   "short_name": "PWA Demo",
-  "description": "Aplikasi PWA responsif untuk demonstrasi template dasar Progressive Web App dengan dukungan offline dan installable.",
+  "description": "Aplikasi Branding UMKM berisi template dasar Progressive Web App dengan dukungan offline dan installable.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
