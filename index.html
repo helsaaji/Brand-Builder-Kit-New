@@ -1,142 +1,876 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#4F46E5" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="icon" href="icons/icon-192x192-A.png" type="image/png" />
-  <title>PWA Template Responsif</title>
-  <link rel="stylesheet" href="assets/style.css" />
-
-  <style>
-    .calculator {
-      max-width: 300px;
-      margin: 20px auto;
-      padding: 15px;
-      border-radius: 12px;
-      background: #1f2937;
-      color: white;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    }
-
-    .display {
-      width: 100%;
-      height: 50px;
-      font-size: 20px;
-      margin-bottom: 10px;
-      text-align: right;
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-    }
-
-    .buttons {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-    }
-
-    .buttons button {
-      padding: 15px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .buttons button:hover {
-      opacity: 0.8;
-    }
-
-    .operator { background: #6366f1; color: white; }
-    .equal { background: #10b981; color: white; }
-    .clear { background: #ef4444; color: white; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brand Builder Kit</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--blue:#4A90E2;--blue-dark:#2d72c8;--blue-light:#EBF4FF;--blue-mid:#c9e1ff;--white:#fff;--bg:#F7F9FC;--card:#fff;--text:#1a1a2e;--text2:#64748b;--text3:#94a3b8;--radius:16px;--radius-sm:10px;--radius-xs:8px;--shadow:0 4px 20px rgba(0,0,0,0.07);--shadow-lg:0 8px 40px rgba(74,144,226,0.15);--green:#22c55e;--red:#ef4444;--amber:#f59e0b;--purple:#8b5cf6;--gold:#C9A96E;--transition:0.3s cubic-bezier(.4,0,.2,1)}
+html,body{height:100%;font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+#app{min-height:100vh;max-width:430px;margin:0 auto;border-left:1px solid #e2e8f0;border-right:1px solid #e2e8f0}
+.screen{display:none;min-height:100vh;animation:fadeIn 0.4s ease}
+.screen.active{display:flex;flex-direction:column}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shakeX{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+@keyframes glowGold{0%,100%{box-shadow:0 0 0 0 rgba(201,169,110,0)}50%{box-shadow:0 0 20px 4px rgba(201,169,110,0.35)}}
+@keyframes popIn{0%{transform:scale(.85);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes logoFade{from{opacity:0;transform:scale(.9) translateY(4px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 28px;border-radius:100px;font-family:'Poppins',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:var(--transition)}
+.btn-primary{background:var(--blue);color:#fff;box-shadow:0 4px 15px rgba(74,144,226,0.4)}.btn-primary:hover{background:var(--blue-dark);transform:translateY(-2px)}.btn-primary:active{transform:scale(0.97)}
+.btn-secondary{background:var(--white);color:var(--blue);border:2px solid var(--blue)}.btn-secondary:hover{background:var(--blue-light);transform:translateY(-2px)}
+.btn-ghost{background:transparent;color:var(--text2);border:1.5px solid var(--text3)}.btn-ghost:hover{background:var(--bg)}
+.btn-danger{background:var(--red);color:#fff}.btn-sm{padding:8px 18px;font-size:13px}.btn-full{width:100%}.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.form-group{margin-bottom:18px}.form-group label{display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px}
+.input-wrap{position:relative}.input-wrap input{width:100%;padding:13px 16px 13px 44px;border:1.5px solid #e2e8f0;border-radius:12px;font-family:'Poppins',sans-serif;font-size:14px;color:var(--text);background:var(--white);transition:var(--transition);outline:none}
+.input-wrap input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(74,144,226,.12)}.input-wrap input.error{border-color:var(--red);animation:shakeX .35s ease}
+.input-wrap .input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none;opacity:.5}
+.input-wrap .eye-btn{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;opacity:.4;transition:opacity .2s;padding:4px}
+.input-wrap .eye-btn:hover{opacity:.8}
+.form-group textarea{width:100%;padding:12px 16px;border:1.5px solid #e2e8f0;border-radius:12px;font-family:'Poppins',sans-serif;font-size:14px;color:var(--text);background:var(--white);transition:var(--transition);outline:none;resize:vertical;min-height:80px}
+.form-group textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(74,144,226,.12)}
+.form-error{color:var(--red);font-size:12px;margin-top:5px;display:none;align-items:center;gap:4px}.form-error.show{display:flex}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;transition:var(--transition)}.card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+#toast-container{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px}
+.toast{background:var(--white);border-radius:var(--radius-sm);box-shadow:0 8px 30px rgba(0,0,0,.15);padding:14px 20px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;min-width:260px;animation:slideUp .3s ease;border-left:4px solid var(--blue)}
+.toast.success{border-color:var(--green)}.toast.error{border-color:var(--red)}.toast.warning{border-color:var(--amber)}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);max-width:430px;width:100%;background:var(--white);border-top:1px solid #e2e8f0;display:flex;justify-content:space-around;padding:8px 0 12px;z-index:100;box-shadow:0 -4px 20px rgba(0,0,0,.06)}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 16px;border-radius:var(--radius-xs);cursor:pointer;transition:var(--transition);color:var(--text3);font-size:11px;font-weight:500;border:none;background:none}
+.nav-item.active{color:var(--blue)}.nav-item svg{width:22px;height:22px;transition:var(--transition)}.nav-item.active svg{transform:translateY(-2px)}
+.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.92);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:9999}
+.loading-overlay.show{display:flex}.loader{width:48px;height:48px;border:4px solid var(--blue-mid);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:16px}
+.loading-text{font-size:15px;font-weight:600;color:var(--text)}.loading-sub{font-size:13px;color:var(--text2);margin-top:4px}
+#screen-splash{background:linear-gradient(135deg,#4A90E2 0%,#2d72c8 50%,#1a56b0 100%);align-items:center;justify-content:center;flex-direction:column}
+.splash-logo{background:rgba(255,255,255,.15);border-radius:24px;width:90px;height:90px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;backdrop-filter:blur(10px);border:1.5px solid rgba(255,255,255,.3)}
+.splash-logo-text{font-size:28px;font-weight:800;color:#fff;letter-spacing:-1px}
+.splash-title{font-size:28px;font-weight:800;color:#fff;letter-spacing:-.5px;animation:pulse 2s ease infinite}
+.splash-tagline{font-size:15px;color:rgba(255,255,255,.8);margin-top:8px}
+.splash-dots{display:flex;gap:8px;margin-top:40px}.splash-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.4);animation:pulse 1.2s ease infinite}
+.splash-dot:nth-child(2){animation-delay:.2s}.splash-dot:nth-child(3){animation-delay:.4s}
+#screen-onboarding{background:var(--white);align-items:center;justify-content:space-between;padding:40px 28px 32px}
+.onboard-skip{align-self:flex-end;background:none;border:none;color:var(--text2);font-size:14px;font-weight:500;cursor:pointer;font-family:'Poppins',sans-serif;padding:4px}
+.onboard-slides{flex:1;display:flex;align-items:center;justify-content:center;width:100%}
+.onboard-slide{display:none;flex-direction:column;align-items:center;text-align:center;width:100%;animation:fadeIn .4s ease}.onboard-slide.active{display:flex}
+.onboard-illus{width:180px;height:180px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;margin-bottom:32px;font-size:72px}
+.onboard-title{font-size:24px;font-weight:700;color:var(--text);margin-bottom:12px;line-height:1.3}.onboard-desc{font-size:15px;color:var(--text2);max-width:280px;line-height:1.6}
+.onboard-dots{display:flex;gap:8px;margin:24px 0}.onboard-dot{width:8px;height:8px;border-radius:50%;background:#e2e8f0;transition:var(--transition)}.onboard-dot.active{background:var(--blue);width:24px;border-radius:100px}
+.onboard-actions{display:flex;gap:12px;width:100%;max-width:320px}.onboard-actions .btn{flex:1}
+#screen-auth{background:var(--bg);overflow-y:auto}
+.auth-hero{background:linear-gradient(135deg,var(--blue),#1a56b0);padding:44px 28px 70px;position:relative;overflow:hidden;text-align:center}
+.auth-hero::before{content:'';position:absolute;top:-50px;left:-50px;width:200px;height:200px;background:rgba(255,255,255,.06);border-radius:50%}
+.auth-hero::after{content:'';position:absolute;bottom:-30px;left:0;right:0;height:50px;background:var(--bg);border-radius:50% 50% 0 0/100% 100% 0 0}
+.auth-hero-logo{display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;background:rgba(255,255,255,.18);border-radius:18px;font-size:22px;font-weight:800;color:#fff;margin-bottom:16px;position:relative;z-index:1;backdrop-filter:blur(8px);border:1.5px solid rgba(255,255,255,.25)}
+.auth-hero h1{font-size:22px;font-weight:800;color:#fff;position:relative;z-index:1;margin-bottom:4px}
+.auth-hero p{font-size:13px;color:rgba(255,255,255,.75);position:relative;z-index:1}
+.auth-card{background:var(--white);border-radius:24px;box-shadow:0 8px 40px rgba(0,0,0,.1);margin:0 16px;position:relative;z-index:2;margin-top:-30px;overflow:hidden}
+.auth-tabs{display:flex;background:#f1f5f9;border-radius:14px;padding:4px;margin:20px 20px 0}
+.auth-tab{flex:1;padding:10px;text-align:center;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:var(--transition);color:var(--text2);border:none;background:none;font-family:'Poppins',sans-serif}
+.auth-tab.active{background:var(--white);color:var(--blue);box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.auth-body{padding:20px 20px 28px}.auth-form{display:none}.auth-form.active{display:block;animation:fadeIn .3s ease}
+.social-row{display:flex;gap:10px;margin-bottom:20px}
+.btn-social{flex:1;background:var(--bg);border:1.5px solid #e2e8f0;border-radius:12px;padding:11px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-family:'Poppins',sans-serif;font-size:13px;font-weight:500;color:var(--text);transition:var(--transition)}
+.btn-social:hover{border-color:var(--blue);background:var(--blue-light);transform:translateY(-1px)}
+.auth-divider{display:flex;align-items:center;gap:12px;margin:16px 0;color:var(--text3);font-size:12px;font-weight:500}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:#e2e8f0}
+.pass-strength{margin-top:6px}.pass-strength-bars{display:flex;gap:4px;margin-bottom:4px}
+.pass-bar{height:3px;border-radius:100px;flex:1;background:#e2e8f0;transition:background .3s}
+.pass-bar.s1{background:var(--red)}.pass-bar.s2{background:var(--amber)}.pass-bar.s3{background:var(--blue)}.pass-bar.s4{background:var(--green)}
+.pass-strength-label{font-size:11px;font-weight:600;color:var(--text3)}
+.check-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:16px}
+.check-row input[type=checkbox]{width:18px;height:18px;cursor:pointer;flex-shrink:0;margin-top:1px;accent-color:var(--blue)}
+.check-row label{font-size:12px;color:var(--text2);cursor:pointer;line-height:1.5}.check-row a{color:var(--blue);font-weight:600;cursor:pointer}
+.auth-link{text-align:center;margin-top:16px;font-size:13px;color:var(--text2)}
+.auth-link button,.auth-link a{background:none;border:none;color:var(--blue);font-weight:600;cursor:pointer;font-size:13px;font-family:'Poppins',sans-serif}
+.forgot-back{display:flex;align-items:center;gap:8px;margin-bottom:20px;cursor:pointer;color:var(--text2);font-size:13px;font-weight:500;background:none;border:none;font-family:'Poppins',sans-serif;padding:0}
+.forgot-illustration{text-align:center;padding:20px 0}.forgot-illustration .fi-icon{width:72px;height:72px;background:var(--blue-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px}
+.forgot-illustration h3{font-size:18px;font-weight:700;margin-bottom:8px}.forgot-illustration p{font-size:13px;color:var(--text2);line-height:1.6;max-width:260px;margin:0 auto}
+.otp-row{display:flex;gap:10px;justify-content:center;margin:20px 0}
+.otp-input{width:48px;height:52px;text-align:center;font-size:20px;font-weight:700;border:2px solid #e2e8f0;border-radius:12px;font-family:'Poppins',sans-serif;outline:none;transition:var(--transition);background:var(--white);color:var(--text)}
+.otp-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(74,144,226,.15)}.otp-input.filled{border-color:var(--blue);background:var(--blue-light)}
+.success-state{text-align:center;padding:24px 0}.success-icon{width:72px;height:72px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px;animation:popIn .4s ease}
+.success-state h3{font-size:18px;font-weight:700;margin-bottom:8px;color:var(--green)}.success-state p{font-size:13px;color:var(--text2);margin-bottom:20px}
+.auth-footer{padding:20px;text-align:center;font-size:12px;color:var(--text3);line-height:1.8}.auth-footer a{color:var(--blue);font-weight:500;cursor:pointer}
+#screen-dashboard{padding-bottom:80px;overflow-y:auto}
+.dash-header{background:linear-gradient(135deg,var(--blue),var(--blue-dark));padding:50px 20px 24px;border-radius:0 0 24px 24px;position:relative;overflow:hidden}
+.dash-header::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:rgba(255,255,255,.08);border-radius:50%}
+.dash-greeting{font-size:14px;color:rgba(255,255,255,.75)}.dash-name{font-size:22px;font-weight:700;color:#fff;margin-top:2px}
+.dash-stats{display:flex;gap:10px;margin-top:16px}.dash-stat{background:rgba(255,255,255,.15);backdrop-filter:blur(10px);border-radius:var(--radius-xs);padding:10px 14px;flex:1}
+.dash-stat-num{font-size:20px;font-weight:700;color:#fff}.dash-stat-label{font-size:11px;color:rgba(255,255,255,.7)}
+.dash-body{padding:20px}
+.dash-cta{background:linear-gradient(135deg,var(--blue),#6ab3ff);border-radius:var(--radius);padding:20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;cursor:pointer;transition:var(--transition)}
+.dash-cta:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}.dash-cta-text h3{font-size:16px;font-weight:700;color:#fff}.dash-cta-text p{font-size:13px;color:rgba(255,255,255,.8);margin-top:4px}
+.dash-cta-btn{background:rgba(255,255,255,.2);color:#fff;padding:10px 18px;border-radius:100px;font-size:13px;font-weight:600;border:none;cursor:pointer;font-family:'Poppins',sans-serif}
+.section-title{font-size:16px;font-weight:700;margin-bottom:14px;color:var(--text)}
+.brand-scroll{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch;scrollbar-width:none}.brand-scroll::-webkit-scrollbar{display:none}
+.brand-card{min-width:140px;background:var(--white);border-radius:var(--radius-sm);box-shadow:var(--shadow);padding:14px;cursor:pointer;transition:var(--transition);flex-shrink:0}
+.brand-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.brand-card-logo{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#fff;margin-bottom:10px}
+.brand-card-name{font-size:13px;font-weight:600;color:var(--text)}.brand-card-cat{font-size:11px;color:var(--text2);margin-top:2px}
+.template-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.template-card{border-radius:var(--radius-sm);overflow:hidden;cursor:pointer;transition:var(--transition);box-shadow:var(--shadow)}
+.template-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}.template-preview{height:100px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.template-label{background:var(--white);padding:8px 10px;font-size:12px;font-weight:600}.empty-brands{text-align:center;padding:30px;color:var(--text2)}.empty-brands p{font-size:14px;margin-bottom:16px}
+#screen-builder{overflow-y:auto;padding-bottom:40px}
+.builder-header{background:var(--white);padding:16px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #e2e8f0;position:sticky;top:0;z-index:50}
+.back-btn{background:var(--bg);border:none;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition)}.back-btn:hover{background:#e2e8f0}
+.builder-header h2{font-size:16px;font-weight:700;flex:1}
+.progress-bar{background:#e2e8f0;height:4px;border-radius:100px;margin:0 20px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),#6ab3ff);border-radius:100px;transition:width .5s ease}
+.step-indicator{display:flex;justify-content:center;gap:6px;padding:12px;margin-bottom:4px}
+.step-dot{width:8px;height:8px;border-radius:50%;background:#e2e8f0;transition:var(--transition)}.step-dot.active{background:var(--blue);transform:scale(1.3)}.step-dot.done{background:var(--green)}
+.builder-step{display:none;padding:20px;animation:fadeIn .35s ease}.builder-step.active{display:block}
+.step-title{font-size:20px;font-weight:700;margin-bottom:6px}.step-subtitle{font-size:14px;color:var(--text2);margin-bottom:24px}
+.style-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.style-option{border:2px solid #e2e8f0;border-radius:var(--radius);padding:16px;cursor:pointer;transition:var(--transition);text-align:center;background:var(--white)}
+.style-option:hover{border-color:var(--blue);background:var(--blue-light)}.style-option.selected{border-color:var(--blue);background:var(--blue-light)}
+.style-option .style-icon{font-size:28px;margin-bottom:8px}.style-option .style-name{font-size:13px;font-weight:600}
+.generate-btn-wrap{margin:20px 0}
+.generate-result{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-top:20px;display:none}.generate-result.show{display:block;animation:slideUp .4s ease}
+.palette-row{display:flex;gap:8px;margin:10px 0}.palette-swatch{width:48px;height:48px;border-radius:var(--radius-xs);transition:var(--transition);cursor:pointer;position:relative}.palette-swatch:hover{transform:scale(1.1)}
+.palette-swatch .swatch-hex{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--text2);white-space:nowrap}
+.font-preview{background:var(--bg);border-radius:var(--radius-xs);padding:12px;margin:10px 0;font-size:18px;font-weight:700}
+.slogan-box{background:var(--blue-light);border-radius:var(--radius-xs);padding:12px 16px;font-size:14px;font-weight:600;color:var(--blue-dark);margin:10px 0;font-style:italic}
+.category-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.cat-option{border:2px solid #e2e8f0;border-radius:var(--radius-xs);padding:12px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:var(--transition);background:var(--white)}
+.cat-option:hover{border-color:var(--blue);background:var(--blue-light)}.cat-option.selected{border-color:var(--blue);background:var(--blue-light)}
+.cat-option .cat-icon{font-size:20px}.cat-option .cat-name{font-size:13px;font-weight:600}
+.generate-name-row{display:flex;gap:8px}
+.generate-name-row input{flex:1;padding:12px 16px;border:1.5px solid #e2e8f0;border-radius:12px;font-family:'Poppins',sans-serif;font-size:14px;color:var(--text);background:var(--white);transition:var(--transition);outline:none}
+.generate-name-row input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(74,144,226,.12)}
+.generate-name-row .btn{white-space:nowrap;border-radius:var(--radius-xs);padding:12px 16px;font-size:13px}
+.logo-studio{background:#0a0a0a;border-radius:20px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
+.logo-studio::before{content:'';position:absolute;top:-60px;right:-60px;width:180px;height:180px;background:radial-gradient(circle,rgba(201,169,110,.06),transparent 70%);pointer-events:none}
+.studio-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.studio-label{font-size:10px;font-weight:700;letter-spacing:.2em;color:var(--gold);text-transform:uppercase}.studio-meta{font-size:10px;color:rgba(255,255,255,.3);letter-spacing:.06em}
+.logo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.lv-tile{border-radius:14px;cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);overflow:hidden;border:1.5px solid rgba(255,255,255,.06);position:relative}
+.lv-tile:hover{transform:translateY(-3px) scale(1.02);border-color:rgba(201,169,110,.4);box-shadow:0 10px 30px rgba(0,0,0,.6)}
+.lv-tile.sel{border-color:var(--gold)!important;box-shadow:0 0 0 2px var(--gold),0 10px 30px rgba(201,169,110,.25);animation:glowGold 2.5s ease infinite}
+.lv-canvas{height:100px;display:flex;align-items:center;justify-content:center;padding:12px;position:relative;overflow:hidden}
+.lv-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-align:center;padding:6px;text-transform:uppercase;border-top:1px solid rgba(255,255,255,.05)}
+.lv-check{position:absolute;top:6px;right:6px;width:18px;height:18px;background:var(--gold);border-radius:50%;display:none;align-items:center;justify-content:center;font-size:9px;color:#000;font-weight:800;z-index:2}
+.lv-tile.sel .lv-check{display:flex}
+.logo-live-badge{display:flex;align-items:center;gap:6px;margin-bottom:16px}
+.logo-live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.5s ease infinite;flex-shrink:0}
+.logo-live-text{font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.08em}
+.accent-section{padding-top:16px;border-top:1px solid rgba(255,255,255,.07)}.accent-label{font-size:10px;font-weight:700;letter-spacing:.15em;color:rgba(255,255,255,.3);text-transform:uppercase;margin-bottom:10px}
+.accent-swatches{display:flex;gap:8px;flex-wrap:wrap}
+.ac-swatch{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .2s;position:relative;flex-shrink:0}
+.ac-swatch:hover{transform:scale(1.2)}.ac-swatch.active{border-color:#fff;transform:scale(1.15)}
+.ac-swatch.active::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1.5px solid rgba(255,255,255,.35)}
+.regen-btn{width:100%;margin-top:16px;padding:10px;border-radius:100px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);color:rgba(255,255,255,.5);font-family:'Poppins',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;letter-spacing:.04em}
+.regen-btn:hover{background:rgba(201,169,110,.08);border-color:rgba(201,169,110,.35);color:var(--gold)}
+@keyframes rotateIcon{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.selected-logo-preview{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin-bottom:16px;display:flex;align-items:center;gap:12px;border-left:3px solid var(--green);animation:slideUp .3s ease}
+.mockup-sync-bar{background:linear-gradient(90deg,rgba(74,144,226,.1),rgba(74,144,226,.05));border:1px solid rgba(74,144,226,.2);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);animation:pulse 1.5s ease infinite;flex-shrink:0}.sync-text{font-size:11px;color:var(--blue-dark);font-weight:600}
+.mockup-tabs{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;scrollbar-width:none}.mockup-tabs::-webkit-scrollbar{display:none}
+.mkp-tab{padding:7px 14px;border-radius:100px;font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid #e2e8f0;background:var(--white);color:var(--text2);white-space:nowrap;transition:var(--transition);flex-shrink:0}
+.mkp-tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.mockup-display{position:relative;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-lg);cursor:pointer;transition:var(--transition);background:var(--white)}
+.mockup-display:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.mockup-hint{text-align:center;font-size:11px;color:var(--text3);margin-top:8px}
+.mockup-download-bar{display:flex;gap:10px;margin-top:14px}
+.dl-btn{flex:1;padding:11px;border-radius:100px;font-family:'Poppins',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:var(--transition)}
+.dl-btn-primary{background:var(--blue);color:#fff;box-shadow:0 4px 15px rgba(74,144,226,.4)}.dl-btn-primary:hover{background:var(--blue-dark);transform:translateY(-2px)}
+.dl-btn-ghost{background:var(--white);color:var(--text2);border:1.5px solid #e2e8f0}.dl-btn-ghost:hover{background:var(--bg)}
+.palette-gen-section{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-top:14px}
+.pgs-title{font-size:12px;font-weight:700;color:var(--text2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em}
+.pgs-chips{display:flex;gap:6px}.pgc{flex:1;height:36px;border-radius:8px;cursor:pointer;transition:var(--transition);border:2px solid transparent}.pgc:hover{transform:scale(1.08)}.pgc.active{border-color:var(--text)}
+.font-rec-section{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-top:12px}
+.fr-title{font-size:12px;font-weight:700;color:var(--text2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em}
+.fr-pairs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fr-pair{border:1.5px solid #e2e8f0;border-radius:10px;padding:10px;cursor:pointer;transition:var(--transition)}.fr-pair:hover{border-color:var(--blue);background:var(--blue-light)}.fr-pair.active{border-color:var(--blue);background:var(--blue-light)}
+.fr-name{font-size:13px;font-weight:700;color:var(--text)}.fr-sub{font-size:10px;color:var(--text2);margin-top:2px}
+.mkp-modal{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:9500;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px)}
+.mkp-modal.show{display:flex;animation:fadeIn .25s ease}
+.mkp-modal-inner{background:var(--white);border-radius:20px;padding:20px;max-width:390px;width:100%;box-shadow:0 30px 80px rgba(0,0,0,.5);max-height:90vh;overflow-y:auto}
+.mkp-modal-title{font-size:15px;font-weight:700;color:var(--text)}
+.mkp-modal-close{background:#f1f5f9;border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:var(--transition)}.mkp-modal-close:hover{background:#e2e8f0}
+#screen-templates{overflow-y:auto;padding-bottom:80px}
+.templates-header{padding:20px;background:var(--white);border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:12px}
+.templates-filter{display:flex;gap:8px;padding:12px 16px;overflow-x:auto;scrollbar-width:none}.templates-filter::-webkit-scrollbar{display:none}
+.filter-chip{padding:6px 16px;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid #e2e8f0;background:var(--white);color:var(--text2);white-space:nowrap;transition:var(--transition)}
+.filter-chip.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.templates-grid{padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.tpl-card{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:var(--transition)}.tpl-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.tpl-preview{height:130px;display:flex;align-items:center;justify-content:center;padding:12px;position:relative;overflow:hidden}
+.tpl-info{background:var(--white);padding:10px 12px}.tpl-name{font-size:13px;font-weight:600;color:var(--text)}.tpl-type{font-size:11px;color:var(--text2);margin-top:2px}
+#screen-editor{overflow-y:auto;padding-bottom:40px}
+.editor-header{background:var(--white);padding:16px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #e2e8f0;position:sticky;top:0;z-index:50}
+.editor-body{padding:16px}
+.editor-canvas-wrap{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:16px}
+.editor-canvas{width:100%;max-width:340px;margin:0 auto;display:block;border-radius:var(--radius-xs);overflow:hidden;position:relative;user-select:none}
+.editor-controls{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
+.ctrl-label{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}.ctrl-group{margin-bottom:16px}
+.ctrl-input{width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:var(--radius-xs);font-family:'Poppins',sans-serif;font-size:13px;outline:none;transition:var(--transition)}.ctrl-input:focus{border-color:var(--blue)}
+.color-row{display:flex;gap:6px;flex-wrap:wrap}.color-btn{width:28px;height:28px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:var(--transition)}.color-btn:hover,.color-btn.active{border-color:var(--text);transform:scale(1.15)}
+.download-bar{display:flex;gap:10px;padding:16px}
+.font-select-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.font-chip{padding:6px 12px;border-radius:100px;font-size:12px;cursor:pointer;border:1.5px solid #e2e8f0;background:var(--white);transition:var(--transition)}.font-chip:hover{border-color:var(--blue)}.font-chip.selected{border-color:var(--blue);background:var(--blue-light);color:var(--blue-dark)}
+.shape-toolbar{display:flex;gap:8px;margin-top:8px}.shape-btn{padding:8px 14px;border-radius:var(--radius-xs);font-size:12px;font-weight:600;border:1.5px solid #e2e8f0;background:var(--white);cursor:pointer;transition:var(--transition)}.shape-btn:hover{border-color:var(--blue);background:var(--blue-light)}
+.upload-zone{border:2px dashed #e2e8f0;border-radius:var(--radius-xs);padding:16px;text-align:center;cursor:pointer;transition:var(--transition)}.upload-zone:hover{border-color:var(--blue);background:var(--blue-light)}
+.preview-modal{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:9000;display:none;align-items:center;justify-content:center;padding:20px}.preview-modal.show{display:flex;animation:fadeIn .25s ease}
+.preview-modal-inner{background:var(--white);border-radius:var(--radius);padding:20px;max-width:380px;width:100%}
+#screen-brand{overflow-y:auto;padding-bottom:80px}
+.brand-page-header{background:var(--white);padding:16px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #e2e8f0}
+.brand-hero{padding:20px}.brand-logo-big{width:90px;height:90px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;color:#fff;margin-bottom:12px}
+.brand-name-big{font-size:24px;font-weight:800}.brand-slogan{font-size:14px;color:var(--text2);margin-top:4px}
+.brand-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.brand-section{padding:0 20px 16px}
+.brand-palette{display:flex;gap:8px;flex-wrap:wrap}.palette-block{border-radius:var(--radius-xs);overflow:hidden;text-align:center;flex:1;min-width:60px}
+.palette-block-color{height:48px}.palette-block-hex{font-size:10px;padding:4px;background:var(--white);font-weight:600}
+#screen-profile{overflow-y:auto;padding-bottom:80px}
+.profile-hero{background:linear-gradient(135deg,var(--blue),var(--blue-dark));padding:50px 20px 30px;position:relative;overflow:hidden;text-align:center}
+.profile-hero::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:rgba(255,255,255,.1);border-radius:50%}
+.avatar{width:80px;height:80px;border-radius:50%;border:3px solid rgba(255,255,255,.5);background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;color:#fff;margin:0 auto 12px;cursor:pointer;position:relative;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}.avatar-upload{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.4);opacity:0;transition:var(--transition);font-size:20px}.avatar:hover .avatar-upload{opacity:1}
+.profile-name{font-size:20px;font-weight:700;color:#fff}.profile-email{font-size:13px;color:rgba(255,255,255,.7);margin-top:4px}
+.profile-badge{display:inline-block;background:rgba(255,255,255,.2);color:#fff;padding:4px 14px;border-radius:100px;font-size:12px;font-weight:600;margin-top:10px}
+.profile-badge.premium{background:linear-gradient(90deg,#f59e0b,#ef4444);animation:pulse 2s ease infinite}
+.profile-stats{display:flex;gap:0;margin:16px 0;background:var(--white);border-radius:var(--radius)}
+.profile-stat{flex:1;padding:16px;text-align:center;border-right:1px solid #e2e8f0}.profile-stat:last-child{border-right:none}
+.profile-stat-num{font-size:20px;font-weight:700;color:var(--blue)}.profile-stat-label{font-size:11px;color:var(--text2);margin-top:2px}
+.menu-list{background:var(--white);border-radius:var(--radius);margin:0 16px 12px;overflow:hidden;box-shadow:var(--shadow)}
+.menu-item{display:flex;align-items:center;gap:14px;padding:16px;cursor:pointer;transition:var(--transition);border-bottom:1px solid #f1f5f9}.menu-item:last-child{border-bottom:none}.menu-item:hover{background:var(--bg)}
+.menu-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}.menu-text{flex:1;font-size:14px;font-weight:500}.menu-arrow{color:var(--text3);font-size:18px}
+#screen-settings{overflow-y:auto;padding-bottom:40px}
+.settings-header{background:var(--white);padding:16px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #e2e8f0;position:sticky;top:0;z-index:50}
+.settings-section{background:var(--white);border-radius:var(--radius);margin:16px;overflow:hidden;box-shadow:var(--shadow)}
+.settings-row{display:flex;align-items:center;gap:14px;padding:16px;border-bottom:1px solid #f1f5f9}.settings-row:last-child{border-bottom:none}
+.settings-label{flex:1;font-size:14px;font-weight:500}.settings-sub{font-size:12px;color:var(--text2);margin-top:2px}
+.toggle{width:44px;height:24px;background:#e2e8f0;border-radius:100px;position:relative;cursor:pointer;transition:var(--transition);border:none;flex-shrink:0}.toggle.on{background:var(--blue)}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:var(--transition);box-shadow:0 1px 4px rgba(0,0,0,.2)}.toggle.on::after{left:23px}
+.lang-select{background:var(--bg);border:1.5px solid #e2e8f0;border-radius:var(--radius-xs);padding:6px 12px;font-family:'Poppins',sans-serif;font-size:13px;cursor:pointer;outline:none}
+#screen-subscription{overflow-y:auto;padding-bottom:40px}
+.sub-header{padding:50px 20px 30px;background:linear-gradient(135deg,var(--blue),var(--blue-dark));text-align:center;position:relative;overflow:hidden}
+.sub-header h1{font-size:26px;font-weight:800;color:#fff;position:relative;z-index:1}.sub-header p{font-size:14px;color:rgba(255,255,255,.75);margin-top:8px;position:relative;z-index:1}
+.plan-tabs{display:flex;background:rgba(255,255,255,.15);border-radius:100px;padding:4px;margin:16px 20px 0;position:relative;z-index:1}
+.plan-tab{flex:1;padding:8px;text-align:center;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;transition:var(--transition);color:rgba(255,255,255,.7)}.plan-tab.active{background:#fff;color:var(--blue)}
+.plan-cards{padding:20px;display:grid;gap:16px}
+.plan-card{background:var(--white);border-radius:20px;padding:24px;box-shadow:var(--shadow);border:2px solid transparent;transition:all .3s ease;position:relative;overflow:hidden}
+.plan-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
+.plan-card.free::before{background:linear-gradient(90deg,#94a3b8,#64748b)}.plan-card.premium::before{background:linear-gradient(90deg,#4A90E2,#6ab3ff)}.plan-card.pro::before{background:linear-gradient(90deg,#8b5cf6,#ec4899)}
+.plan-card.featured{border-color:var(--blue)}.plan-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,.12)}
+.plan-badge{display:inline-block;padding:5px 14px;border-radius:100px;font-size:11px;font-weight:700;margin-bottom:12px}
+.badge-popular{background:linear-gradient(90deg,var(--blue),#6ab3ff);color:#fff}.badge-pro{background:linear-gradient(90deg,#8b5cf6,#ec4899);color:#fff}
+.plan-name{font-size:20px;font-weight:800;color:var(--text)}.plan-price{font-size:34px;font-weight:800;margin:12px 0 4px}.plan-price.free-price{color:var(--text)}
+.plan-price.premium-price{background:linear-gradient(90deg,var(--blue),#2d72c8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.plan-price.pro-price{background:linear-gradient(90deg,#8b5cf6,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.plan-period{font-size:13px;font-weight:400;color:var(--text2)}.plan-divider{height:1px;background:#e2e8f0;margin:16px 0}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.plan-features li{font-size:13px;color:var(--text2);display:flex;align-items:center;gap:10px}
+.plan-features li .fi{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.plan-features li.yes .fi{background:#dcfce7;color:#16a34a}.plan-features li.no .fi{background:#f1f5f9;color:#94a3b8}.plan-features li.no{opacity:.7}
+.plan-btn{width:100%;padding:14px;border-radius:100px;font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;cursor:pointer;border:none;transition:var(--transition)}
+.plan-btn.btn-free{background:var(--bg);color:var(--text2);border:1.5px solid #e2e8f0}
+.plan-btn.btn-premium{background:linear-gradient(90deg,var(--blue),#2d72c8);color:#fff;box-shadow:0 6px 20px rgba(74,144,226,.4)}.plan-btn.btn-premium:hover{transform:translateY(-2px)}
+.plan-btn.btn-pro{background:linear-gradient(90deg,#8b5cf6,#ec4899);color:#fff;box-shadow:0 6px 20px rgba(139,92,246,.4)}.plan-btn.btn-pro:hover{transform:translateY(-2px)}
+#screen-brandslist{overflow-y:auto;padding-bottom:80px}
+</style>
 </head>
-
 <body>
-  <header class="header">
-    <h1>PWA Template</h1>
-    <p>Contoh aplikasi web progresif yang responsif</p>
-  </header>
+<div id="app">
+<div id="toast-container"></div>
+<div class="loading-overlay" id="loading-overlay"><div class="loader"></div><p class="loading-text" id="loading-text">Generating...</p><p class="loading-sub" id="loading-sub"></p></div>
 
-  <main class="main">
-    <section class="card">
-      <h2>Selamat Datang!</h2>
-      <p>
-        Ini adalah template PWA responsif. Kamu bisa ubah teks, warna, dan layout-nya sesuai kebutuhan.
-      </p>
-      <button onclick="alert('PWA aktif!')">Tes Tombol</button>
-    </section>
+<div class="mkp-modal" id="mkp-modal" onclick="if(event.target===this)closeMkpModal()">
+  <div class="mkp-modal-inner">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <span class="mkp-modal-title" id="mkp-modal-title">Mockup Preview</span>
+      <button class="mkp-modal-close" onclick="closeMkpModal()">✕</button>
+    </div>
+    <div id="mkp-modal-content"></div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="dl-btn dl-btn-ghost" style="flex:1" onclick="closeMkpModal()">Tutup</button>
+      <button class="dl-btn dl-btn-primary" style="flex:1" onclick="downloadMockup()">⬇ Download</button>
+    </div>
+  </div>
+</div>
+<div class="preview-modal" id="preview-modal" onclick="if(event.target===this)closePreview()">
+  <div class="preview-modal-inner">
+    <h3 style="font-size:16px;font-weight:700;margin-bottom:16px">Preview Template</h3>
+    <div id="preview-modal-content"></div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btn-ghost" style="flex:1" onclick="closePreview()">Tutup</button>
+      <button class="btn btn-primary" style="flex:1" onclick="downloadTemplate()">⬇ Download</button>
+    </div>
+  </div>
+</div>
 
-    <!-- ✅ KALKULATOR DITAMBAHKAN -->
-    <section class="calculator">
-      <input type="text" id="display" class="display" disabled>
+<!-- SPLASH -->
+<div id="screen-splash" class="screen active">
+  <div class="splash-logo"><div class="splash-logo-text">BBK</div></div>
+  <div class="splash-title">Brand Builder Kit</div>
+  <div class="splash-tagline">Build Your Brand Easily</div>
+  <div class="splash-dots"><div class="splash-dot"></div><div class="splash-dot"></div><div class="splash-dot"></div></div>
+</div>
 
-      <div class="buttons">
-        <button onclick="clearDisplay()" class="clear">C</button>
-        <button onclick="appendValue('/')" class="operator">/</button>
-        <button onclick="appendValue('*')" class="operator">*</button>
-        <button onclick="appendValue('-')" class="operator">-</button>
+<!-- ONBOARDING -->
+<div id="screen-onboarding" class="screen">
+  <button class="onboard-skip" onclick="goTo('auth')">Lewati</button>
+  <div class="onboard-slides">
+    <div class="onboard-slide active" id="slide-0"><div class="onboard-illus">🚀</div><h2 class="onboard-title">Buat Brand Lebih Mudah</h2><p class="onboard-desc">Tidak perlu desainer. Semua tersedia di sini.</p></div>
+    <div class="onboard-slide" id="slide-1"><div class="onboard-illus">⚡</div><h2 class="onboard-title">Generate Otomatis</h2><p class="onboard-desc">Logo, warna, font, dan slogan langsung jadi dalam detik.</p></div>
+    <div class="onboard-slide" id="slide-2"><div class="onboard-illus">🌟</div><h2 class="onboard-title">Mulai Bisnis Sekarang</h2><p class="onboard-desc">Cocok untuk UMKM dan pemula yang ingin tampil profesional.</p></div>
+  </div>
+  <div class="onboard-dots"><div class="onboard-dot active" id="od-0"></div><div class="onboard-dot" id="od-1"></div><div class="onboard-dot" id="od-2"></div></div>
+  <div class="onboard-actions">
+    <button class="btn btn-ghost" id="onboard-prev" onclick="prevSlide()" style="display:none">Kembali</button>
+    <button class="btn btn-primary btn-full" id="onboard-next" onclick="nextSlide()">Selanjutnya</button>
+  </div>
+</div>
 
-        <button onclick="appendValue('7')">7</button>
-        <button onclick="appendValue('8')">8</button>
-        <button onclick="appendValue('9')">9</button>
-        <button onclick="appendValue('+')" class="operator">+</button>
-
-        <button onclick="appendValue('4')">4</button>
-        <button onclick="appendValue('5')">5</button>
-        <button onclick="appendValue('6')">6</button>
-
-        <button onclick="appendValue('1')">1</button>
-        <button onclick="appendValue('2')">2</button>
-        <button onclick="appendValue('3')">3</button>
-
-        <button onclick="appendValue('0')">0</button>
-        <button onclick="appendValue('.')">.</button>
-        <button onclick="calculate()" class="equal">=</button>
+<!-- AUTH -->
+<div id="screen-auth" class="screen">
+  <div class="auth-hero">
+    <div class="auth-hero-logo">BBK</div>
+    <h1 id="auth-hero-title">Selamat Datang!</h1>
+    <p id="auth-hero-sub">Masuk atau daftar untuk mulai membangun brand</p>
+  </div>
+  <div class="auth-card" id="card-login">
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthMode('login')">Masuk</button>
+      <button class="auth-tab" onclick="switchAuthMode('register')">Daftar</button>
+    </div>
+    <div class="auth-body">
+      <div class="social-row">
+        <button class="btn-social" onclick="toast('Login Google segera hadir!','warning')">🔵 Google</button>
+        <button class="btn-social" onclick="toast('Login Facebook segera hadir!','warning')">🔷 Facebook</button>
       </div>
-    </section>
-  </main>
+      <div class="auth-divider">atau masuk dengan email</div>
+      <div id="form-login" class="auth-form active">
+        <div class="form-group"><label>Email</label><div class="input-wrap"><span class="input-icon">📧</span><input type="email" id="login-email" placeholder="email@contoh.com" onkeydown="if(event.key==='Enter')doLogin()"></div><div class="form-error" id="login-email-err">⚠ <span></span></div></div>
+        <div class="form-group"><label>Password</label><div class="input-wrap"><span class="input-icon">🔒</span><input type="password" id="login-pass" placeholder="Masukkan password" onkeydown="if(event.key==='Enter')doLogin()"><button class="eye-btn" onclick="togglePass('login-pass',this)">👁</button></div><div class="form-error" id="login-pass-err">⚠ <span></span></div></div>
+        <div style="display:flex;justify-content:flex-end;margin-bottom:16px"><button style="background:none;border:none;color:var(--blue);font-size:13px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif" onclick="switchAuthMode('forgot')">Lupa password?</button></div>
+        <button class="btn btn-primary btn-full" onclick="doLogin()">Masuk Sekarang →</button>
+        <div class="auth-link" style="margin-top:20px">Belum punya akun? <button onclick="switchAuthMode('register')">Daftar sekarang</button></div>
+      </div>
+      <div id="form-register" class="auth-form">
+        <div class="form-group"><label>Nama Lengkap</label><div class="input-wrap"><span class="input-icon">👤</span><input type="text" id="reg-name" placeholder="Masukkan nama lengkap"></div><div class="form-error" id="reg-name-err">⚠ <span></span></div></div>
+        <div class="form-group"><label>Email</label><div class="input-wrap"><span class="input-icon">📧</span><input type="email" id="reg-email" placeholder="email@contoh.com"></div><div class="form-error" id="reg-email-err">⚠ <span></span></div></div>
+        <div class="form-group"><label>Password</label><div class="input-wrap"><span class="input-icon">🔒</span><input type="password" id="reg-pass" placeholder="Minimal 8 karakter" oninput="checkPassStrength(this.value)"><button class="eye-btn" onclick="togglePass('reg-pass',this)">👁</button></div><div class="pass-strength" id="pass-strength" style="display:none"><div class="pass-strength-bars"><div class="pass-bar" id="pb1"></div><div class="pass-bar" id="pb2"></div><div class="pass-bar" id="pb3"></div><div class="pass-bar" id="pb4"></div></div><div class="pass-strength-label" id="pass-label"></div></div><div class="form-error" id="reg-pass-err">⚠ <span></span></div></div>
+        <div class="form-group"><label>Konfirmasi Password</label><div class="input-wrap"><span class="input-icon">🔒</span><input type="password" id="reg-pass2" placeholder="Ulangi password"><button class="eye-btn" onclick="togglePass('reg-pass2',this)">👁</button></div><div class="form-error" id="reg-pass2-err">⚠ <span></span></div></div>
+        <div class="check-row"><input type="checkbox" id="reg-terms"><label for="reg-terms">Saya setuju dengan <a onclick="toast('Segera hadir','info')">Syarat &amp; Ketentuan</a></label></div>
+        <button class="btn btn-primary btn-full" onclick="doRegister()">Buat Akun Gratis 🚀</button>
+        <div class="auth-link" style="margin-top:20px">Sudah punya akun? <button onclick="switchAuthMode('login')">Masuk sekarang</button></div>
+      </div>
+    </div>
+  </div>
+  <div class="auth-card" id="card-forgot" style="display:none">
+    <div class="auth-body">
+      <div id="forgot-step-1">
+        <button class="forgot-back" onclick="switchAuthMode('login')">← Kembali ke Login</button>
+        <div class="forgot-illustration"><div class="fi-icon">🔐</div><h3>Lupa Password?</h3><p>Masukkan email untuk menerima kode OTP reset password.</p></div>
+        <div class="form-group"><label>Email Terdaftar</label><div class="input-wrap"><span class="input-icon">📧</span><input type="email" id="forgot-email" placeholder="email@contoh.com"></div><div class="form-error" id="forgot-email-err">⚠ <span></span></div></div>
+        <button class="btn btn-primary btn-full" onclick="sendOtp()">Kirim Kode OTP →</button>
+      </div>
+      <div id="forgot-step-2" style="display:none">
+        <button class="forgot-back" onclick="showForgotStep(1)">← Ganti Email</button>
+        <div class="forgot-illustration"><div class="fi-icon">📨</div><h3>Cek Email Kamu</h3><p>Kode OTP dikirim ke <strong id="otp-email-display"></strong>.</p></div>
+        <div class="otp-row">
+          <input class="otp-input" maxlength="1" id="otp1" oninput="otpNext(this,'otp2')" onkeydown="otpKey(event,this,null,'otp1')">
+          <input class="otp-input" maxlength="1" id="otp2" oninput="otpNext(this,'otp3')" onkeydown="otpKey(event,this,'otp1','otp2')">
+          <input class="otp-input" maxlength="1" id="otp3" oninput="otpNext(this,'otp4')" onkeydown="otpKey(event,this,'otp2','otp3')">
+          <input class="otp-input" maxlength="1" id="otp4" oninput="otpNext(this,null)" onkeydown="otpKey(event,this,'otp3','otp4')">
+        </div>
+        <div style="text-align:center;margin-bottom:16px;font-size:13px;color:var(--text2)">Tidak menerima? <button id="resend-btn" style="background:none;border:none;color:var(--blue);font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;font-size:13px" onclick="resendOtp()">Kirim Ulang</button><span id="resend-timer" style="display:none;color:var(--text3)"> (<span id="timer-count">60</span>s)</span></div>
+        <button class="btn btn-primary btn-full" onclick="verifyOtp()">Verifikasi Kode →</button>
+      </div>
+      <div id="forgot-step-3" style="display:none">
+        <button class="forgot-back" onclick="showForgotStep(2)">← Kembali</button>
+        <div class="forgot-illustration"><div class="fi-icon">🔑</div><h3>Password Baru</h3><p>Buat password baru yang kuat.</p></div>
+        <div class="form-group"><label>Password Baru</label><div class="input-wrap"><span class="input-icon">🔒</span><input type="password" id="new-pass-reset" placeholder="Minimal 8 karakter"><button class="eye-btn" onclick="togglePass('new-pass-reset',this)">👁</button></div></div>
+        <div class="form-group"><label>Konfirmasi</label><div class="input-wrap"><span class="input-icon">🔒</span><input type="password" id="new-pass-reset2" placeholder="Ulangi password baru"></div><div class="form-error" id="new-pass-err">⚠ <span></span></div></div>
+        <button class="btn btn-primary btn-full" onclick="doResetPassword()">Simpan Password →</button>
+      </div>
+      <div id="forgot-step-4" style="display:none">
+        <div class="success-state"><div class="success-icon">✅</div><h3>Password Berhasil Direset!</h3><p>Silakan login dengan password baru.</p><button class="btn btn-primary btn-full" onclick="switchAuthMode('login')">Masuk Sekarang →</button></div>
+      </div>
+    </div>
+  </div>
+  <div class="auth-footer">Dengan menggunakan layanan ini, kamu menyetujui<br><a>Syarat Layanan</a> · <a>Kebijakan Privasi</a></div>
+</div>
 
-  <button onclick="alert('tombol testing hidup')">Ini tombol 1</button>
+<!-- DASHBOARD -->
+<div id="screen-dashboard" class="screen">
+  <div class="dash-header">
+    <div class="dash-greeting">Halo,</div>
+    <div class="dash-name" id="dash-name">Pengguna 👋</div>
+    <div class="dash-stats">
+      <div class="dash-stat"><div class="dash-stat-num" id="stat-brands">0</div><div class="dash-stat-label">Brand Dibuat</div></div>
+      <div class="dash-stat"><div class="dash-stat-num" id="stat-downloads">0</div><div class="dash-stat-label">Total Download</div></div>
+      <div class="dash-stat"><div class="dash-stat-num" id="stat-status">Free</div><div class="dash-stat-label">Status</div></div>
+    </div>
+  </div>
+  <div class="dash-body">
+    <div class="dash-cta" onclick="goTo('builder')"><div class="dash-cta-text"><h3>+ Buat Brand Baru</h3><p>Mulai dari nol dalam 1 menit</p></div><button class="dash-cta-btn">Mulai →</button></div>
+    <div><div class="section-title">Brand Saya</div><div class="brand-scroll" id="brand-scroll"><div class="empty-brands" id="empty-brands"><p>Belum ada brand. Yuk buat yang pertama!</p><button class="btn btn-primary btn-sm" onclick="goTo('builder')">+ Buat Brand</button></div></div></div>
+    <div style="margin-top:24px">
+      <div class="section-title">Template Populer</div>
+      <div class="template-grid">
+        <div class="template-card" onclick="openTemplate(0)"><div class="template-preview" style="background:linear-gradient(135deg,#4A90E2,#1a56b0)"><div style="text-align:center;color:#fff"><div style="font-size:11px;opacity:.7">BRAND</div><div style="font-weight:800;font-size:18px">SALE 50%</div></div></div><div class="template-label">Promo Instagram</div></div>
+        <div class="template-card" onclick="openTemplate(1)"><div class="template-preview" style="background:#fff;border:1px solid #e2e8f0"><div style="font-size:14px;font-weight:700;color:#1a1a2e">New Collection</div></div><div class="template-label">Instagram Story</div></div>
+        <div class="template-card" onclick="openTemplate(2)"><div class="template-preview" style="background:linear-gradient(90deg,#1a56b0,#4A90E2)"><div style="font-size:13px;font-weight:800;color:#fff">GRAND OPENING</div></div><div class="template-label">Banner Online Shop</div></div>
+        <div class="template-card" onclick="openTemplate(3)"><div class="template-preview" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9)"><div style="text-align:center;color:#fff"><div style="font-size:22px">⚡</div><div style="font-size:12px;font-weight:700">Flash Sale</div></div></div><div class="template-label">Flash Sale</div></div>
+      </div>
+    </div>
+  </div>
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="navTo('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Home</button>
+    <button class="nav-item" onclick="navTo('templates')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Template</button>
+    <button class="nav-item" onclick="navTo('brandslist')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>Brand</button>
+    <button class="nav-item" onclick="navTo('profile')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profil</button>
+  </nav>
+</div>
 
-  <footer class="footer">
-    <p>© 2025 Anwar Fauzi</p>
-  </footer>
+<!-- BUILDER -->
+<div id="screen-builder" class="screen">
+  <div class="builder-header">
+    <button class="back-btn" onclick="goTo('dashboard')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15,18 9,12 15,6"/></svg></button>
+    <h2>Brand Builder</h2>
+    <span style="font-size:12px;color:var(--text2)">Langkah <span id="step-num">1</span>/6</span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:16.6%"></div></div>
+  <div class="step-indicator">
+    <div class="step-dot active" id="sdot-0"></div><div class="step-dot" id="sdot-1"></div><div class="step-dot" id="sdot-2"></div><div class="step-dot" id="sdot-3"></div><div class="step-dot" id="sdot-4"></div><div class="step-dot" id="sdot-5"></div>
+  </div>
+  <div class="builder-step active" id="step-1">
+    <h2 class="step-title">Info Brand</h2><p class="step-subtitle">Ceritakan sedikit tentang brand kamu</p>
+    <div class="form-group"><label>Nama Brand</label><div class="generate-name-row"><input type="text" id="brand-name-input" placeholder="Cth: Helsa Wear"><button class="btn btn-secondary" onclick="generateBrandName()">✨ Generate</button></div></div>
+    <div class="form-group"><label>Kategori</label><div class="category-grid">
+      <div class="cat-option" onclick="selectCat(this,'Fashion')"><span class="cat-icon">👗</span><span class="cat-name">Fashion</span></div>
+      <div class="cat-option" onclick="selectCat(this,'Makanan')"><span class="cat-icon">🍔</span><span class="cat-name">Makanan</span></div>
+      <div class="cat-option" onclick="selectCat(this,'Jasa')"><span class="cat-icon">💼</span><span class="cat-name">Jasa</span></div>
+      <div class="cat-option" onclick="selectCat(this,'Teknologi')"><span class="cat-icon">💻</span><span class="cat-name">Teknologi</span></div>
+      <div class="cat-option" onclick="selectCat(this,'Kecantikan')"><span class="cat-icon">💄</span><span class="cat-name">Kecantikan</span></div>
+      <div class="cat-option" onclick="selectCat(this,'Lainnya')"><span class="cat-icon">🌟</span><span class="cat-name">Lainnya</span></div>
+    </div></div>
+    <div class="form-group"><label>Deskripsi Singkat</label><textarea id="brand-desc" placeholder="Ceritakan brand kamu..."></textarea></div>
+    <button class="btn btn-primary btn-full" onclick="nextStep()">Selanjutnya →</button>
+  </div>
+  <div class="builder-step" id="step-2">
+    <h2 class="step-title">Pilih Gaya Brand</h2>
+    <p class="step-subtitle" id="step2-subtitle">Gaya visual yang mencerminkan brand kamu</p>
+    <div class="style-grid" id="style-grid-dynamic"></div>
+    <div style="display:flex;gap:10px"><button class="btn btn-ghost" onclick="prevStep()">← Kembali</button><button class="btn btn-primary" style="flex:1" onclick="nextStep()">Selanjutnya →</button></div>
+  </div>
+  <div class="builder-step" id="step-3">
+    <h2 class="step-title">Identitas Visual</h2><p class="step-subtitle">Generate palet warna, font, dan slogan brand kamu</p>
+    <div class="generate-btn-wrap"><button class="btn btn-primary btn-full" onclick="generateIdentity()">⚡ Generate Identitas</button></div>
+    <div class="generate-result" id="identity-result">
+      <div style="margin-bottom:16px"><div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px">🎨 PALET WARNA</div><div class="palette-row" id="palette-display"></div></div>
+      <div style="margin-bottom:16px"><div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">🔤 FONT</div><div class="font-preview" id="font-display"></div></div>
+      <div style="margin-bottom:16px"><div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">💬 SLOGAN</div><div class="slogan-box" id="slogan-display"></div></div>
+      <div><div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">🧾 DESKRIPSI</div><p style="font-size:13px;color:var(--text2);line-height:1.6" id="brand-desc-gen"></p></div>
+      <button class="btn btn-ghost btn-sm" style="margin-top:14px" onclick="generateIdentity()">🔄 Generate Ulang</button>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px"><button class="btn btn-ghost" onclick="prevStep()">← Kembali</button><button class="btn btn-primary" style="flex:1" onclick="nextStep()" id="btn-next-3" disabled>Selanjutnya →</button></div>
+  </div>
+  <div class="builder-step" id="step-4">
+    <h2 class="step-title">Logo Studio</h2>
+    <p class="step-subtitle">Pilih logo · otomatis diterapkan ke Mockup</p>
+    <div class="logo-studio">
+      <div class="studio-header"><span class="studio-label">✦ Logo Studio</span><span class="studio-meta">Pilih 1 variasi</span></div>
+      <div class="logo-live-badge"><div class="logo-live-dot"></div><span class="logo-live-text">LOGO TERPILIH LANGSUNG MASUK KE SEMUA MOCKUP</span></div>
+      <div class="logo-grid" id="logo-grid"></div>
+      <div class="accent-section"><div class="accent-label">Warna Aksen</div><div class="accent-swatches" id="accent-swatches"></div></div>
+      <button class="regen-btn" onclick="regenerateLogos()">↺ Regenerasi Logo</button>
+    </div>
+    <div id="selected-logo-preview" class="selected-logo-preview" style="display:none">
+      <div id="slp-render" style="width:64px;height:64px;border-radius:10px;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#111"></div>
+      <div><div style="font-size:11px;font-weight:700;color:var(--text2)">LOGO TERPILIH</div><div style="font-size:13px;color:var(--text);margin-top:2px" id="slp-name">—</div><div style="font-size:11px;color:var(--green);margin-top:2px">✓ Diterapkan ke semua mockup</div></div>
+    </div>
+    <div style="display:flex;gap:10px"><button class="btn btn-ghost" onclick="prevStep()">← Kembali</button><button class="btn btn-primary" style="flex:1" onclick="nextStep()">Selanjutnya →</button></div>
+  </div>
+  <div class="builder-step" id="step-5">
+    <h2 class="step-title">Mockup Preview</h2>
+    <p class="step-subtitle" id="step5-subtitle">Mockup sesuai kategori · logo terpilih sudah diterapkan</p>
+    <div class="mockup-sync-bar"><div class="sync-dot"></div><span class="sync-text" id="sync-text">Tersinkron dengan logo terpilih</span></div>
+    <div class="mockup-tabs" id="mockup-tabs"></div>
+    <div class="mockup-display" id="mockup-display" onclick="openMockupFull()"></div>
+    <div class="mockup-hint">Tap untuk fullscreen · klik tab untuk ganti media</div>
+    <div class="mockup-download-bar">
+      <button class="dl-btn dl-btn-ghost" onclick="openMockupFull()">🔍 Perbesar</button>
+      <button class="dl-btn dl-btn-primary" onclick="downloadMockup()">⬇ Download Mockup</button>
+    </div>
+    <div class="palette-gen-section"><div class="pgs-title">🎨 Palet Warna</div><div class="pgs-chips" id="pgs-chips"></div></div>
+    <div class="font-rec-section"><div class="fr-title">🔤 Rekomendasi Font</div><div class="fr-pairs" id="fr-pairs"></div></div>
+    <div style="display:flex;gap:10px;margin-top:16px"><button class="btn btn-ghost" onclick="prevStep()">← Kembali</button><button class="btn btn-primary" style="flex:1" onclick="nextStep()">Selanjutnya →</button></div>
+  </div>
+  <div class="builder-step" id="step-6">
+    <h2 class="step-title">Template Editor</h2><p class="step-subtitle">Edit template sesuai brand kamu</p>
+    <div id="builder-templates-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px"></div>
+    <div style="display:flex;gap:10px"><button class="btn btn-ghost" onclick="prevStep()">← Kembali</button><button class="btn btn-primary" style="flex:1" onclick="saveBrand()">✅ Simpan Brand</button></div>
+  </div>
+</div>
 
-  <script>
-    // PWA Service Worker
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./service-worker.js')
-        .then(() => console.log('SW registered!'))
-        .catch(err => console.error('SW gagal:', err));
-    }
+<!-- TEMPLATES LIST -->
+<div id="screen-templates" class="screen">
+  <div class="templates-header"><button class="back-btn" onclick="goBack()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15,18 9,12 15,6"/></svg></button><h2 style="font-size:16px;font-weight:700">Semua Template</h2></div>
+  <div class="templates-filter">
+    <div class="filter-chip active" onclick="filterTemplates('all',this)">Semua</div>
+    <div class="filter-chip" onclick="filterTemplates('promo',this)">Promo</div>
+    <div class="filter-chip" onclick="filterTemplates('story',this)">Story</div>
+    <div class="filter-chip" onclick="filterTemplates('banner',this)">Banner</div>
+    <div class="filter-chip" onclick="filterTemplates('produk',this)">Produk</div>
+    <div class="filter-chip" onclick="filterTemplates('testimoni',this)">Testimoni</div>
+  </div>
+  <div class="templates-grid" id="all-templates-grid"></div>
+  <nav class="bottom-nav">
+    <button class="nav-item" onclick="navTo('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Home</button>
+    <button class="nav-item active" onclick="navTo('templates')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Template</button>
+    <button class="nav-item" onclick="navTo('brandslist')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>Brand</button>
+    <button class="nav-item" onclick="navTo('profile')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profil</button>
+  </nav>
+</div>
 
-    // ✅ LOGIC KALKULATOR
-    let display = document.getElementById("display");
+<!-- EDITOR -->
+<div id="screen-editor" class="screen">
+  <div class="editor-header"><button class="back-btn" onclick="goTo('templates')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15,18 9,12 15,6"/></svg></button><h2 style="font-size:16px;font-weight:700;flex:1" id="editor-title">Edit Template</h2><button class="btn btn-primary btn-sm" onclick="previewTemplate()">👁 Preview</button></div>
+  <div class="editor-body">
+    <div class="editor-canvas-wrap"><div class="editor-canvas" id="editor-canvas"></div></div>
+    <div class="editor-controls">
+      <div class="ctrl-group"><div class="ctrl-label">Judul Utama</div><input class="ctrl-input" id="ctrl-title" type="text" oninput="updateCanvas()" placeholder="Judul Template"></div>
+      <div class="ctrl-group"><div class="ctrl-label">Teks Kedua</div><input class="ctrl-input" id="ctrl-sub" type="text" oninput="updateCanvas()" placeholder="Teks pendukung"></div>
+      <div class="ctrl-group"><div class="ctrl-label">Nama Brand</div><input class="ctrl-input" id="ctrl-brand" type="text" oninput="updateCanvas()" placeholder="Nama brand"></div>
+      <div class="ctrl-group"><div class="ctrl-label">Teks Tombol</div><input class="ctrl-input" id="ctrl-cta" type="text" oninput="updateCanvas()" placeholder="Shop Now →" value="Shop Now →"></div>
+      <div class="ctrl-group"><div class="ctrl-label">Font</div><div class="font-select-row"><div class="font-chip selected" onclick="selectEditorFont(this,'Poppins')">Poppins</div><div class="font-chip" onclick="selectEditorFont(this,'Georgia')">Serif</div><div class="font-chip" onclick="selectEditorFont(this,&quot;'Courier New'&quot;)">Mono</div><div class="font-chip" onclick="selectEditorFont(this,'Impact')">Bold</div></div></div>
+      <div class="ctrl-group"><div class="ctrl-label">Warna Background</div><div class="color-row">
+        <div class="color-btn active" style="background:linear-gradient(135deg,#4A90E2,#1a56b0)" onclick="setCanvasBg('linear-gradient(135deg,#4A90E2,#1a56b0)',this)"></div>
+        <div class="color-btn" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9)" onclick="setCanvasBg('linear-gradient(135deg,#8b5cf6,#6d28d9)',this)"></div>
+        <div class="color-btn" style="background:linear-gradient(135deg,#22c55e,#16a34a)" onclick="setCanvasBg('linear-gradient(135deg,#22c55e,#16a34a)',this)"></div>
+        <div class="color-btn" style="background:linear-gradient(135deg,#f59e0b,#ef4444)" onclick="setCanvasBg('linear-gradient(135deg,#f59e0b,#ef4444)',this)"></div>
+        <div class="color-btn" style="background:linear-gradient(135deg,#1a1a2e,#16213e)" onclick="setCanvasBg('linear-gradient(135deg,#1a1a2e,#16213e)',this)"></div>
+        <div class="color-btn" style="background:#ffffff;border:1.5px solid #e2e8f0" onclick="setCanvasBg('#ffffff',this)"></div>
+        <div class="color-btn" style="background:linear-gradient(135deg,#ec4899,#f43f5e)" onclick="setCanvasBg('linear-gradient(135deg,#ec4899,#f43f5e)',this)"></div>
+        <div class="color-btn" style="background:linear-gradient(135deg,#f97316,#fb923c)" onclick="setCanvasBg('linear-gradient(135deg,#f97316,#fb923c)',this)"></div>
+      </div></div>
+      <div class="ctrl-group"><div class="ctrl-label">Tambah Elemen</div><div class="shape-toolbar"><button class="shape-btn" onclick="addShape('rect')">▬ Kotak</button><button class="shape-btn" onclick="addShape('circle')">● Lingkaran</button><button class="shape-btn" onclick="addShape('line')">— Garis</button></div></div>
+      <div class="ctrl-group"><div class="ctrl-label">Upload Gambar</div><div class="upload-zone" onclick="document.getElementById('img-upload').click()"><div style="font-size:20px;margin-bottom:6px">🖼</div><div style="font-size:12px;color:var(--text2)">Klik untuk upload gambar produk</div><input type="file" id="img-upload" accept="image/*" style="display:none" onchange="handleImageUpload(event)"></div></div>
+    </div>
+    <div class="download-bar"><button class="btn btn-ghost" style="flex:1" onclick="previewTemplate()">👁 Preview</button><button class="btn btn-primary" style="flex:1" onclick="downloadTemplate()">⬇ Download PNG</button></div>
+    <div style="padding:0 16px 16px;font-size:12px;color:var(--text3);text-align:center">* Versi Free menyertakan watermark. Upgrade ke Premium untuk download bersih.</div>
+  </div>
+</div>
 
-    function appendValue(value) {
-      display.value += value;
-    }
+<!-- BRANDS LIST -->
+<div id="screen-brandslist" class="screen">
+  <div style="background:var(--white);padding:16px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #e2e8f0;position:sticky;top:0;z-index:50"><h2 style="font-size:16px;font-weight:700;flex:1">Brand Saya</h2><button class="btn btn-primary btn-sm" onclick="goTo('builder')">+ Baru</button></div>
+  <div id="brands-full-list" style="padding:16px;display:grid;gap:12px"></div>
+  <nav class="bottom-nav">
+    <button class="nav-item" onclick="navTo('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Home</button>
+    <button class="nav-item" onclick="navTo('templates')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Template</button>
+    <button class="nav-item active" onclick="navTo('brandslist')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>Brand</button>
+    <button class="nav-item" onclick="navTo('profile')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profil</button>
+  </nav>
+</div>
 
-    function clearDisplay() {
-      display.value = "";
-    }
+<!-- BRAND DETAIL -->
+<div id="screen-brand" class="screen">
+  <div class="brand-page-header"><button class="back-btn" onclick="goBack()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15,18 9,12 15,6"/></svg></button><h2 style="font-size:16px;font-weight:700;flex:1">Detail Brand</h2><button class="btn btn-ghost btn-sm" onclick="deleteBrand()">🗑</button></div>
+  <div class="brand-hero">
+    <div class="brand-logo-big" id="bd-logo"></div>
+    <div class="brand-name-big" id="bd-name"></div>
+    <div class="brand-slogan" id="bd-slogan"></div>
+    <div class="brand-actions"><button class="btn btn-primary btn-sm" onclick="downloadBrand()">⬇ Download Kit</button><button class="btn btn-secondary btn-sm" onclick="toast('Link brand disalin!','success')">📤 Share</button><button class="btn btn-ghost btn-sm" onclick="editBrand()">✏️ Edit</button></div>
+  </div>
+  <div class="brand-section"><div class="section-title">Palet Warna</div><div class="brand-palette" id="bd-palette"></div></div>
+  <div class="brand-section"><div class="section-title">Font</div><div class="font-preview" id="bd-font"></div></div>
+  <div class="brand-section"><div class="section-title">Mockup Preview</div><div id="bd-mockup-display" style="border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)"></div></div>
+</div>
 
-    function calculate() {
-      try {
-        display.value = eval(display.value);
-      } catch {
-        display.value = "Error";
-      }
-    }
-  </script>
+<!-- PROFILE -->
+<div id="screen-profile" class="screen">
+  <div class="profile-hero">
+    <div class="avatar" onclick="document.getElementById('avatar-file').click()"><div id="profile-avatar-initials" style="font-size:28px;font-weight:700;color:#fff"></div><img id="profile-avatar-img" src="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%"><div class="avatar-upload">📷</div></div>
+    <input type="file" id="avatar-file" accept="image/*" style="display:none" onchange="uploadAvatar(event)">
+    <div class="profile-name" id="profile-name-display"></div>
+    <div class="profile-email" id="profile-email-display"></div>
+    <div class="profile-badge" id="profile-badge">Free</div>
+  </div>
+  <div style="padding:16px">
+    <div class="profile-stats">
+      <div class="profile-stat"><div class="profile-stat-num" id="ps-brands">0</div><div class="profile-stat-label">Brand</div></div>
+      <div class="profile-stat"><div class="profile-stat-num" id="ps-downloads">0</div><div class="profile-stat-label">Download</div></div>
+      <div class="profile-stat"><div class="profile-stat-num" id="ps-templates">0</div><div class="profile-stat-label">Template</div></div>
+    </div>
+  </div>
+  <div class="menu-list">
+    <div class="menu-item" onclick="navTo('brandslist')"><div class="menu-icon" style="background:#EBF4FF">🎨</div><span class="menu-text">Brand Saya</span><span class="menu-arrow">›</span></div>
+    <div class="menu-item" onclick="goTo('settings')"><div class="menu-icon" style="background:#f0fdf4">⚙️</div><span class="menu-text">Pengaturan</span><span class="menu-arrow">›</span></div>
+    <div class="menu-item" onclick="goTo('subscription')"><div class="menu-icon" style="background:#fefce8">👑</div><span class="menu-text">Langganan</span><span style="background:linear-gradient(90deg,#f59e0b,#ef4444);color:#fff;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700">Upgrade</span></div>
+    <div class="menu-item" onclick="toast('Fitur bantuan segera hadir!','info')"><div class="menu-icon" style="background:#fdf4ff">❓</div><span class="menu-text">Bantuan</span><span class="menu-arrow">›</span></div>
+    <div class="menu-item" onclick="doLogout()"><div class="menu-icon" style="background:#fef2f2">🚪</div><span class="menu-text" style="color:var(--red)">Keluar</span></div>
+  </div>
+  <nav class="bottom-nav">
+    <button class="nav-item" onclick="navTo('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Home</button>
+    <button class="nav-item" onclick="navTo('templates')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Template</button>
+    <button class="nav-item" onclick="navTo('brandslist')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>Brand</button>
+    <button class="nav-item active" onclick="navTo('profile')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profil</button>
+  </nav>
+</div>
 
+<!-- SETTINGS -->
+<div id="screen-settings" class="screen">
+  <div class="settings-header"><button class="back-btn" onclick="goBack()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15,18 9,12 15,6"/></svg></button><h2 style="font-size:16px;font-weight:700">Pengaturan</h2></div>
+  <div style="padding:16px;font-size:13px;font-weight:600;color:var(--text2)">AKUN</div>
+  <div class="settings-section">
+    <div class="settings-row"><div><div class="settings-label">Nama</div><div class="settings-sub" id="settings-name-display"></div></div><button class="btn btn-ghost btn-sm" onclick="editProfileName()">Edit</button></div>
+    <div class="settings-row"><div><div class="settings-label">Ganti Password</div></div><button class="btn btn-ghost btn-sm" onclick="showChangePassword()">Ubah</button></div>
+  </div>
+  <div id="change-pass-form" style="display:none;background:var(--white);border-radius:var(--radius);margin:0 16px;padding:16px;box-shadow:var(--shadow)">
+    <div class="form-group"><label>Password Baru</label><input type="password" id="new-pass" placeholder="Minimal 6 karakter" style="width:100%;padding:12px 16px;border:1.5px solid #e2e8f0;border-radius:12px;font-family:'Poppins',sans-serif;font-size:14px;outline:none"></div>
+    <div class="form-group"><label>Konfirmasi</label><input type="password" id="new-pass2" placeholder="Ulangi password baru" style="width:100%;padding:12px 16px;border:1.5px solid #e2e8f0;border-radius:12px;font-family:'Poppins',sans-serif;font-size:14px;outline:none"></div>
+    <button class="btn btn-primary btn-sm" onclick="changePassword()">Simpan Password</button>
+  </div>
+  <div style="padding:16px 16px 4px;font-size:13px;font-weight:600;color:var(--text2)">PREFERENSI</div>
+  <div class="settings-section">
+    <div class="settings-row"><div><div class="settings-label">Notifikasi</div></div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
+    <div class="settings-row"><div><div class="settings-label">Bahasa</div></div><select class="lang-select" onchange="toast('Bahasa diperbarui','success')"><option value="id">🇮🇩 Indonesia</option><option value="en">🇺🇸 English</option></select></div>
+    <div class="settings-row"><div><div class="settings-label">Dark Mode</div><div class="settings-sub">Segera hadir</div></div><button class="toggle" onclick="toast('Dark mode segera hadir!','info')"></button></div>
+  </div>
+  <div style="padding:16px"><button class="btn btn-danger btn-full" onclick="doLogout()">Logout dari Semua Perangkat</button></div>
+</div>
+
+<!-- SUBSCRIPTION -->
+<div id="screen-subscription" class="screen">
+  <div class="sub-header">
+    <button class="back-btn" onclick="goBack()" style="background:rgba(255,255,255,.2);position:absolute;top:16px;left:16px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="15,18 9,12 15,6"/></svg></button>
+    <div style="font-size:36px;margin-bottom:8px">👑</div>
+    <h1>Pilih Paket Terbaik</h1><p>Buka semua fitur premium Brand Builder Kit</p>
+    <div class="plan-tabs"><div class="plan-tab active" onclick="setPlanBilling('monthly',this)">Bulanan</div><div class="plan-tab" onclick="setPlanBilling('yearly',this)">Tahunan <span style="background:rgba(255,255,255,.3);padding:2px 6px;border-radius:100px;font-size:10px;margin-left:4px">-40%</span></div></div>
+  </div>
+  <div class="plan-cards">
+    <div class="plan-card free"><div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px"><div><div class="plan-name">Free</div></div><span style="font-size:28px">🆓</span></div><div class="plan-price free-price">Rp 0 <span class="plan-period">/ bulan</span></div><div class="plan-divider"></div><ul class="plan-features"><li class="yes"><div class="fi">✓</div>2 brand aktif</li><li class="yes"><div class="fi">✓</div>6 variasi logo</li><li class="yes"><div class="fi">✓</div>Export PNG + watermark</li><li class="no"><div class="fi">✗</div>Export HD tanpa watermark</li></ul><button class="plan-btn btn-free">Paket Aktif</button></div>
+    <div class="plan-card premium featured"><div class="plan-badge badge-popular">✨ PALING POPULER</div><div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px"><div><div class="plan-name">Premium</div></div><span style="font-size:28px">⭐</span></div><div class="plan-price premium-price" id="premium-price-display">Rp 49.000 <span class="plan-period">/ bulan</span></div><div class="plan-divider"></div><ul class="plan-features"><li class="yes"><div class="fi">✓</div>Brand tak terbatas</li><li class="yes"><div class="fi">✓</div>Export HD tanpa watermark</li><li class="yes"><div class="fi">✓</div>Custom font &amp; warna</li><li class="no"><div class="fi">✗</div>Template eksklusif Pro</li></ul><button class="plan-btn btn-premium" onclick="upgradePlan('premium')">Upgrade ke Premium</button></div>
+    <div class="plan-card pro"><div class="plan-badge badge-pro">🔥 PRO BARU</div><div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px"><div><div class="plan-name">Pro</div></div><span style="font-size:28px">🚀</span></div><div class="plan-price pro-price" id="pro-price-display">Rp 99.000 <span class="plan-period">/ bulan</span></div><div class="plan-divider"></div><ul class="plan-features"><li class="yes"><div class="fi">✓</div>Semua fitur Premium</li><li class="yes"><div class="fi">✓</div>Export 4K tanpa batas</li><li class="yes"><div class="fi">✓</div>Brand kit PDF auto-generate</li><li class="yes"><div class="fi">✓</div>Support 24/7</li></ul><button class="plan-btn btn-pro" onclick="upgradePlan('pro')">Upgrade ke Pro 🚀</button></div>
+  </div>
+</div>
+
+</div>
+<script>
+// ================================================================
+// GLOBAL STATE
+// ================================================================
+let currentUser=null,brands=[],currentBrand={},currentStep=1,currentSlide=0,editingBrandId=null,currentTemplateId=0,screenHistory=[];
+let builderState={name:'',category:'',subCategory:'',style:'',desc:'',colors:[],font:'',slogan:'',logoVariant:0,accentColor:'',generatedDesc:'',selectedLogoHTML:'',selectedLogoLabel:''};
+let editorFont='Poppins',billingCycle='monthly',uploadedImage=null;
+let otpCode='',forgotEmail='',timerInterval=null,activeMockupTab=0;
+
+// ================================================================
+// DATA
+// ================================================================
+const PREFIXES=['Neo','Aura','Vibe','Luxe','Craft','Pure','Bold','Nova','Forge','Zen','Rise','Glow','Ark','Soma','Lune'];
+const SUFFIXES=['Wear','Studio','Brand','Co','Lab','Works','Hub','Store','Space','Collective','Atelier'];
+const R=a=>a[Math.floor(Math.random()*a.length)];
+
+const BRAND_STYLES={
+  Fashion:[{value:'Modern',icon:'✨',name:'Modern',desc:'Clean & Kontemporer'},{value:'Streetwear',icon:'🔥',name:'Streetwear',desc:'Urban & Bold'},{value:'Elegan',icon:'💎',name:'Elegan',desc:'Mewah & Refined'},{value:'Vintage',icon:'🕰️',name:'Vintage',desc:'Retro & Timeless'},{value:'Minimalis',icon:'⬜',name:'Minimalis',desc:'Simple & Clean'},{value:'Sporty',icon:'⚡',name:'Sporty',desc:'Aktif & Dynamic'}],
+  Makanan:[{value:'Fresh',icon:'🌿',name:'Fresh',desc:'Segar & Natural'},{value:'Fun',icon:'🎉',name:'Fun',desc:'Ceria & Playful'},{value:'Traditional',icon:'🏺',name:'Traditional',desc:'Otentik & Warisan'},{value:'Premium',icon:'⭐',name:'Premium',desc:'Mewah & Berkelas'},{value:'Casual',icon:'😊',name:'Casual',desc:'Santai & Friendly'},{value:'Healthy',icon:'💚',name:'Healthy',desc:'Sehat & Bersih'}],
+  Teknologi:[{value:'Futuristik',icon:'🚀',name:'Futuristik',desc:'Futuristic & Canggih'},{value:'Minimalis',icon:'◻️',name:'Minimalis',desc:'Clean & Presisi'},{value:'Digital',icon:'💡',name:'Digital',desc:'Bright & Interaktif'},{value:'Inovatif',icon:'🔬',name:'Inovatif',desc:'Cutting-edge'},{value:'Profesional',icon:'🏢',name:'Profesional',desc:'Corporate & Trusted'},{value:'Dark Tech',icon:'🌑',name:'Dark Tech',desc:'Gelap & Premium'}],
+  Kecantikan:[{value:'Soft',icon:'🌸',name:'Soft',desc:'Lembut & Feminin'},{value:'Luxury',icon:'💎',name:'Luxury',desc:'Mewah & Premium'},{value:'Natural',icon:'🌿',name:'Natural',desc:'Organik & Alami'},{value:'Glam',icon:'💄',name:'Glam',desc:'Glamour & Bold'},{value:'Minimalis',icon:'🤍',name:'Minimalis',desc:'Clean & Pure'},{value:'Playful',icon:'🌈',name:'Playful',desc:'Colorful & Fun'}],
+  Jasa:[{value:'Profesional',icon:'🏢',name:'Profesional',desc:'Formal & Terpercaya'},{value:'Friendly',icon:'🤝',name:'Friendly',desc:'Hangat & Approachable'},{value:'Corporate',icon:'📊',name:'Corporate',desc:'Institusional & Solid'},{value:'Kreatif',icon:'🎨',name:'Kreatif',desc:'Inovatif & Ekspresif'},{value:'Modern',icon:'✨',name:'Modern',desc:'Up-to-date & Fresh'},{value:'Minimalis',icon:'⬜',name:'Minimalis',desc:'Clean & Efisien'}],
+  Lainnya:[{value:'Profesional',icon:'🏢',name:'Profesional',desc:'Formal & Clean'},{value:'Playful',icon:'🎨',name:'Playful',desc:'Fun & Creative'},{value:'Minimalis',icon:'⬜',name:'Minimalis',desc:'Simple & Modern'},{value:'Bold',icon:'💥',name:'Bold',desc:'Kuat & Berkesan'},{value:'Elegan',icon:'💎',name:'Elegan',desc:'Mewah & Sophisticated'},{value:'Santai',icon:'😎',name:'Santai',desc:'Casual & Friendly'}],
+};
+
+const MOCKUP_OPTIONS={
+  Fashion:[{label:'👕 Kaos',key:'kaos'},{label:'🧥 Hoodie',key:'hoodie'},{label:'👜 Tote Bag',key:'totebag'},{label:'🏷️ Hang Tag',key:'hangtag'}],
+  Makanan:[{label:'📦 Kemasan Box',key:'box'},{label:'🥤 Cup/Gelas',key:'cup'},{label:'🛍️ Paper Bag',key:'paperbag'},{label:'📱 Feed IG',key:'feed'}],
+  Teknologi:[{label:'📱 App UI',key:'appui'},{label:'💻 Laptop Screen',key:'laptop'},{label:'🖥️ Dashboard',key:'dashboard'},{label:'🪪 Kartu Nama',key:'card'}],
+  Kecantikan:[{label:'🧴 Botol Skincare',key:'bottle'},{label:'📦 Packaging Box',key:'cosmbox'},{label:'💊 Label Produk',key:'label'},{label:'📱 Feed IG',key:'feed'}],
+  Jasa:[{label:'🪪 Kartu Nama',key:'card'},{label:'🌐 Website Preview',key:'web'},{label:'📋 Letterhead',key:'letterhead'},{label:'📱 Feed IG',key:'feed'}],
+  Lainnya:[{label:'🪪 Kartu Nama',key:'card'},{label:'👕 Kaos',key:'kaos'},{label:'📱 Feed IG',key:'feed'},{label:'👜 Tote Bag',key:'totebag'}],
+};
+
+const PALETTES={Modern:[['#1a1a2e','#e94560','#f5f5f5','#c9a84c']],Streetwear:[['#0F0F0F','#FF3C3C','#F5F5F5','#FFD700']],Elegan:[['#C9A84C','#1C1C1C','#F5F0E8','#8B7355']],Vintage:[['#8B4513','#D2691E','#F5DEB3','#696969']],Minimalis:[['#2D3436','#636E72','#DFE6E9','#B2BEC3']],Sporty:[['#0052CC','#00875A','#FF5630','#FFAB00']],Fresh:[['#00B894','#00CEC9','#55EFC4','#FFEAA7']],Fun:[['#FF6B6B','#4ECDC4','#45B7D1','#FFA07A']],Traditional:[['#8B2635','#C17817','#F5F0E8','#704214']],Premium:[['#1C1C1C','#C9A84C','#F5F0E8','#2C1654']],Casual:[['#636E72','#2D3436','#DFE6E9','#74B9FF']],Healthy:[['#00B894','#55EFC4','#FFEAA7','#6C5CE7']],Futuristik:[['#0F0F2D','#00D4FF','#7B2FBE','#FF0080']],Digital:[['#4A90E2','#7EC8E3','#D7F0F7','#1A3A5C']],Inovatif:[['#6C63FF','#FF6584','#43CBFF','#F8F9FA']],'Dark Tech':[['#0A0A1A','#00D4FF','#7B2FBE','#1A1A2E']],Soft:[['#FFB5C8','#FFC8DD','#FF85A1','#F7E7CE']],Luxury:[['#2C1654','#C9A84C','#F5ECD7','#8B6914']],Natural:[['#6B8F71','#A7C4A0','#E8F5E9','#C4A882']],Glam:[['#C9006B','#FF69B4','#FFD1DC','#8B0057']],Playful:[['#FF6B6B','#4ECDC4','#45B7D1','#FFA07A']],Profesional:[['#2C3E50','#3498DB','#ECF0F1','#27AE60']],Friendly:[['#FF6B35','#F7C59F','#EFEFD0','#004E89']],Corporate:[['#1B2A4A','#2E5BFF','#E8EDFB','#8C96C6']],Kreatif:[['#FF4081','#7C4DFF','#40C4FF','#FFEE58']],Bold:[['#000000','#FF0000','#FFFFFF','#FFD700']],Santai:[['#4ECDC4','#FFE66D','#FF6B6B','#95E1D3']],default:[['#4A90E2','#2C3E50','#ECF0F1','#27AE60']]};
+const FONTS={Modern:['DM Sans'],Streetwear:['Oswald'],Elegan:['Playfair Display'],Vintage:['Playfair Display'],Minimalis:['DM Sans'],Sporty:['Montserrat'],Fresh:['Nunito'],Fun:['Nunito'],Traditional:['Playfair Display'],Premium:['Playfair Display'],Casual:['Poppins'],Healthy:['DM Sans'],Futuristik:['Montserrat'],Digital:['DM Sans'],Inovatif:['Poppins'],'Dark Tech':['Oswald'],Soft:['Poppins'],Luxury:['Playfair Display'],Natural:['Nunito'],Glam:['Playfair Display'],Playful:['Nunito'],Profesional:['Montserrat'],Friendly:['Poppins'],Corporate:['Montserrat'],Kreatif:['Poppins'],Bold:['Oswald'],Santai:['Nunito'],default:['Poppins']};
+const SLOGANS={Modern:['Designed for Now','Style Meets Function'],Streetwear:['Stay Raw, Stay Real','Born on the Streets'],Elegan:['Elegance in Every Detail','Timeless. Exquisite.'],Vintage:['Made to Last','Timeless Style'],Minimalis:['Less is More','Beauty in Simplicity'],Sporty:['Move Forward','No Limits'],Fresh:['Farm to Table','Pure & Fresh'],Fun:['Every Bite Counts','Taste the Joy'],Traditional:['Rasa Autentik','Warisan Nusantara'],Premium:['Only the Finest','A Cut Above'],Casual:['Good Food, Good Mood','Simply Delicious'],Healthy:['Eat Clean, Live Well','Good for You'],Futuristik:['The Future is Now','Beyond Limits'],Digital:['Connected. Empowered.','Always On'],Inovatif:['Born to Disrupt','Think Different'],'Dark Tech':['Precision. Power. Performance.','Darker. Faster.'],Soft:['Beauty in Gentleness','Soft as a Petal'],Luxury:['Indulge in Perfection','Pure Luxury'],Natural:['Back to Nature','Clean Beauty'],Glam:['Own the Room','Be Unforgettable'],Playful:['Color Your World','Happy Skin, Happy You'],Profesional:['Excellence Delivered','Built to Perform'],Friendly:["We're Here for You",'Your Trusted Partner'],Corporate:['Driving Business Forward','Committed to Excellence'],Kreatif:['Creativity Unleashed','We Make Ideas Work'],Bold:['Make a Statement','Be Noticed'],Santai:['Easy Does It','Just Be You'],default:['Build Something Great','Your Brand, Your Story']};
+const FONT_PAIRS=[{name:'Poppins + DM Sans',display:'Poppins',body:'DM Sans'},{name:'Playfair + Poppins',display:'Playfair Display',body:'Poppins'},{name:'Montserrat + Georgia',display:'Montserrat',body:'Georgia'},{name:'DM Sans + Nunito',display:'DM Sans',body:'Nunito'}];
+const allTemplates=[{id:0,name:'Promo Instagram',type:'promo',bg:'linear-gradient(135deg,#4A90E2,#1a56b0)',mainTitle:'SALE 50%',sub:'Limited Time',brand:'BRAND',layout:0},{id:1,name:'Instagram Story',type:'story',bg:'#ffffff',mainTitle:'New Collection',sub:'Lihat koleksi terbaru kami',brand:'BRAND',layout:1},{id:2,name:'Banner Online Shop',type:'banner',bg:'linear-gradient(90deg,#1a56b0,#4A90E2)',mainTitle:'GRAND OPENING',sub:'Special Offer',brand:'BRAND',layout:2},{id:3,name:'Flash Sale',type:'promo',bg:'linear-gradient(135deg,#8b5cf6,#6d28d9)',mainTitle:'Flash Sale!',sub:'Hari ini saja!',brand:'BRAND',layout:0},{id:4,name:'New Arrival',type:'produk',bg:'linear-gradient(135deg,#22c55e,#16a34a)',mainTitle:'NEW IN',sub:'Koleksi Terbaru',brand:'BRAND',layout:0},{id:5,name:'Mega Diskon',type:'promo',bg:'linear-gradient(135deg,#f59e0b,#ef4444)',mainTitle:'DISKON 70%',sub:'Promo terbatas!',brand:'BRAND',layout:0},{id:6,name:'Product Highlight',type:'produk',bg:'linear-gradient(135deg,#1a1a2e,#16213e)',mainTitle:'Featured Product',sub:'Kualitas terbaik',brand:'BRAND',layout:3},{id:7,name:'Testimoni',type:'testimoni',bg:'#ffffff',mainTitle:'"Produk terbaik!"',sub:'⭐⭐⭐⭐⭐ - Pelanggan',brand:'BRAND',layout:4}];
+const CATEGORY_FLOW={Fashion:{label:'Jenis Fashion',emoji:'👗',options:[{value:'Casual',icon:'😊',label:'Casual'},{value:'Formal',icon:'👔',label:'Formal'},{value:'Streetwear',icon:'🔥',label:'Streetwear'},{value:'Sporty',icon:'⚽',label:'Sporty'},{value:'Modest/Hijab',icon:'🧕',label:'Modest/Hijab'},{value:'Kids',icon:'🧒',label:'Kids'}]},Makanan:{label:'Jenis Makanan',emoji:'🍔',options:[{value:'Makanan Berat',icon:'🍛',label:'Makanan Berat'},{value:'Snack',icon:'🍿',label:'Snack'},{value:'Minuman',icon:'🧋',label:'Minuman'},{value:'Dessert',icon:'🧁',label:'Dessert'},{value:'Katering',icon:'🍱',label:'Katering'},{value:'Healthy Food',icon:'🥗',label:'Healthy Food'}]},Jasa:{label:'Jenis Layanan',emoji:'💼',options:[{value:'Digital Marketing',icon:'📱',label:'Digital'},{value:'Offline/Lapangan',icon:'🏢',label:'Offline'},{value:'Konsultasi',icon:'💬',label:'Konsultasi'},{value:'Desain Kreatif',icon:'🎨',label:'Desain'},{value:'Pendidikan',icon:'📚',label:'Pendidikan'},{value:'Keuangan',icon:'💰',label:'Keuangan'}]},Teknologi:{label:'Jenis Produk',emoji:'💻',options:[{value:'Aplikasi Mobile',icon:'📲',label:'Aplikasi'},{value:'Website/SaaS',icon:'🌐',label:'Website'},{value:'AI Tools',icon:'🤖',label:'AI Tools'},{value:'Hardware/IoT',icon:'🔌',label:'Hardware'},{value:'Game',icon:'🎮',label:'Game'},{value:'Cybersecurity',icon:'🔒',label:'Security'}]},Kecantikan:{label:'Fokus Produk',emoji:'💄',options:[{value:'Skincare',icon:'🧴',label:'Skincare'},{value:'Makeup',icon:'💋',label:'Makeup'},{value:'Haircare',icon:'💇',label:'Haircare'},{value:'Perawatan',icon:'✨',label:'Treatment'},{value:'Parfum',icon:'🌸',label:'Parfum'},{value:'Wellness',icon:'🧘',label:'Wellness'}]},Lainnya:{label:'Kategori Kustom',emoji:'🌟',options:[],freeText:true}};
+
+function genPalette(s){return R(PALETTES[s]||PALETTES.default)}
+function genSlogan(s){return R(SLOGANS[s]||SLOGANS.default)}
+function genFont(s){return(FONTS[s]||FONTS.default)[0]}
+function genDesc(name,cat,style){return R([`${name} hadir sebagai brand ${cat} yang mengedepankan kualitas dan gaya ${style}.`,`Dengan semangat inovasi, ${name} membawa identitas ${style} ke dunia ${cat}.`,`${name} adalah brand ${cat} modern yang lahir dari passion dan dedikasi.`])}
+function generateBrandName(){document.getElementById('brand-name-input').value=R(PREFIXES)+' '+R(SUFFIXES);toast('Nama brand digenerate! ✨','success')}
+
+// ================================================================
+// NAVIGATION
+// ================================================================
+function goTo(id){screenHistory.push(id);document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));const t=document.getElementById('screen-'+id);if(t)t.classList.add('active');if(id==='dashboard')refreshDashboard();if(id==='profile')refreshProfile();if(id==='settings')refreshSettings();if(id==='brandslist')refreshBrandsList();if(id==='templates')renderAllTemplates()}
+function goBack(){screenHistory.pop();const p=screenHistory[screenHistory.length-1]||'dashboard';document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));const t=document.getElementById('screen-'+p);if(t)t.classList.add('active');if(p==='dashboard')refreshDashboard();if(p==='profile')refreshProfile();if(p==='templates')renderAllTemplates()}
+function navTo(id){screenHistory=[id];goTo(id)}
+function toast(msg,type='info'){const icons={success:'✅',error:'❌',warning:'⚠️',info:'ℹ️'};const el=document.createElement('div');el.className=`toast ${type}`;el.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;document.getElementById('toast-container').appendChild(el);setTimeout(()=>{el.style.opacity='0';el.style.transform='translateX(100%)';el.style.transition='all .3s ease';setTimeout(()=>el.remove(),300)},2500)}
+function showLoading(t,s=''){document.getElementById('loading-text').textContent=t;document.getElementById('loading-sub').textContent=s;document.getElementById('loading-overlay').classList.add('show')}
+function hideLoading(){document.getElementById('loading-overlay').classList.remove('show')}
+setTimeout(()=>{const s=localStorage.getItem('bbk_user');if(s){currentUser=JSON.parse(s);brands=JSON.parse(localStorage.getItem('bbk_brands')||'[]');goTo('dashboard')}else{goTo('onboarding')}},2200)
+
+// ================================================================
+// ONBOARDING
+// ================================================================
+function nextSlide(){if(currentSlide<2){document.getElementById('slide-'+currentSlide).classList.remove('active');document.getElementById('od-'+currentSlide).classList.remove('active');currentSlide++;document.getElementById('slide-'+currentSlide).classList.add('active');document.getElementById('od-'+currentSlide).classList.add('active');document.getElementById('onboard-prev').style.display='';if(currentSlide===2)document.getElementById('onboard-next').textContent='Mulai Sekarang'}else{goTo('auth')}}
+function prevSlide(){if(currentSlide>0){document.getElementById('slide-'+currentSlide).classList.remove('active');document.getElementById('od-'+currentSlide).classList.remove('active');currentSlide--;document.getElementById('slide-'+currentSlide).classList.add('active');document.getElementById('od-'+currentSlide).classList.add('active');if(currentSlide===0)document.getElementById('onboard-prev').style.display='none';document.getElementById('onboard-next').textContent='Selanjutnya'}}
+
+// ================================================================
+// AUTH
+// ================================================================
+function switchAuthMode(mode){document.getElementById('card-login').style.display='none';document.getElementById('card-forgot').style.display='none';if(mode==='forgot'){document.getElementById('card-forgot').style.display='block';document.getElementById('auth-hero-title').textContent='Reset Password';document.getElementById('auth-hero-sub').textContent='Kami akan bantu kamu masuk kembali';showForgotStep(1);return}document.getElementById('card-login').style.display='block';document.getElementById('auth-hero-title').textContent=mode==='login'?'Selamat Datang!':'Buat Akun Baru';document.getElementById('auth-hero-sub').textContent=mode==='login'?'Masuk ke akun Brand Builder Kit kamu':'Gratis selamanya';document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',i===(mode==='login'?0:1)));document.getElementById('form-login').classList.toggle('active',mode==='login');document.getElementById('form-register').classList.toggle('active',mode==='register')}
+function togglePass(id,btn){const i=document.getElementById(id);i.type=i.type==='password'?'text':'password';btn.textContent=i.type==='text'?'🙈':'👁'}
+function checkPassStrength(v){const s=document.getElementById('pass-strength');s.style.display=v?'block':'none';if(!v)return;let sc=0;if(v.length>=8)sc++;if(/[A-Z]/.test(v))sc++;if(/[0-9]/.test(v))sc++;if(/[^A-Za-z0-9]/.test(v))sc++;const cls=['','s1','s2','s3','s4'],lbl=['','Sangat Lemah','Lemah','Kuat','Sangat Kuat'],clr=['','#ef4444','#f59e0b','#4A90E2','#22c55e'];[1,2,3,4].forEach(i=>{document.getElementById('pb'+i).className='pass-bar'+(i<=sc?' '+cls[sc]:'')});document.getElementById('pass-label').textContent=lbl[sc];document.getElementById('pass-label').style.color=clr[sc]}
+function showErr(id,msg){const el=document.getElementById(id);if(!el)return;if(el.querySelector('span'))el.querySelector('span').textContent=msg;else el.textContent=msg;el.classList.add('show')}
+function clearErr(id){const el=document.getElementById(id);if(el)el.classList.remove('show')}
+function doRegister(){['reg-name-err','reg-email-err','reg-pass-err','reg-pass2-err'].forEach(clearErr);const name=document.getElementById('reg-name').value.trim(),email=document.getElementById('reg-email').value.trim(),pass=document.getElementById('reg-pass').value,pass2=document.getElementById('reg-pass2').value,terms=document.getElementById('reg-terms').checked;let ok=true;if(!name){showErr('reg-name-err','Nama wajib diisi');ok=false}if(!email||!/\S+@\S+\.\S+/.test(email)){showErr('reg-email-err','Format email tidak valid');ok=false}if(pass.length<6){showErr('reg-pass-err','Password minimal 6 karakter');ok=false}if(pass!==pass2){showErr('reg-pass2-err','Password tidak cocok');ok=false}if(!terms){toast('Setujui syarat & ketentuan dulu','warning');ok=false}if(!ok)return;const users=JSON.parse(localStorage.getItem('bbk_users')||'[]');if(users.find(u=>u.email===email)){showErr('reg-email-err','Email sudah terdaftar');return}const user={name,email,password:pass,status:'free',downloads:0,avatar:''};users.push(user);localStorage.setItem('bbk_users',JSON.stringify(users));currentUser=user;localStorage.setItem('bbk_user',JSON.stringify(user));brands=[];localStorage.setItem('bbk_brands',JSON.stringify(brands));toast('Akun berhasil dibuat! 🎉','success');setTimeout(()=>goTo('dashboard'),600)}
+function doLogin(){['login-email-err','login-pass-err'].forEach(clearErr);const email=document.getElementById('login-email').value.trim(),pass=document.getElementById('login-pass').value;let ok=true;if(!email){showErr('login-email-err','Masukkan email kamu');ok=false}if(!pass){showErr('login-pass-err','Masukkan password kamu');ok=false}if(!ok)return;const users=JSON.parse(localStorage.getItem('bbk_users')||'[]');const user=users.find(u=>u.email===email);if(!user){showErr('login-email-err','Email belum terdaftar');return}if(user.password!==pass){showErr('login-pass-err','Password salah');return}currentUser=user;localStorage.setItem('bbk_user',JSON.stringify(user));brands=JSON.parse(localStorage.getItem('bbk_brands')||'[]');toast('Selamat datang kembali! 👋','success');setTimeout(()=>goTo('dashboard'),500)}
+function doLogout(){localStorage.removeItem('bbk_user');currentUser=null;brands=[];toast('Berhasil logout','info');setTimeout(()=>{goTo('auth');switchAuthMode('login')},400)}
+function showForgotStep(n){[1,2,3,4].forEach(i=>{const el=document.getElementById('forgot-step-'+i);if(el)el.style.display=i===n?'block':'none'})}
+function sendOtp(){clearErr('forgot-email-err');const email=document.getElementById('forgot-email').value.trim();if(!email||!/\S+@\S+\.\S+/.test(email)){showErr('forgot-email-err','Email tidak valid');return}const users=JSON.parse(localStorage.getItem('bbk_users')||'[]');if(!users.find(u=>u.email===email)){showErr('forgot-email-err','Email belum terdaftar');return}forgotEmail=email;otpCode=String(Math.floor(1000+Math.random()*9000));console.log('OTP (demo):',otpCode);document.getElementById('otp-email-display').textContent=email;['otp1','otp2','otp3','otp4'].forEach(id=>{const el=document.getElementById(id);el.value='';el.classList.remove('filled')});showForgotStep(2);startResendTimer();toast('Kode OTP dikirim! (Demo: cek console)','success')}
+function startResendTimer(){let count=60;const btn=document.getElementById('resend-btn'),timer=document.getElementById('resend-timer'),cnt=document.getElementById('timer-count');btn.style.display='none';timer.style.display='inline';if(timerInterval)clearInterval(timerInterval);timerInterval=setInterval(()=>{cnt.textContent=--count;if(count<=0){clearInterval(timerInterval);btn.style.display='inline';timer.style.display='none'}},1000)}
+function resendOtp(){otpCode=String(Math.floor(1000+Math.random()*9000));console.log('OTP baru:',otpCode);startResendTimer();toast('Kode OTP baru dikirim!','success')}
+function otpNext(el,nid){el.classList.toggle('filled',el.value.length>0);if(el.value&&nid)document.getElementById(nid).focus()}
+function otpKey(e,el,pid){if(e.key==='Backspace'&&!el.value&&pid)document.getElementById(pid).focus()}
+function verifyOtp(){const entered=['otp1','otp2','otp3','otp4'].map(id=>document.getElementById(id).value).join('');if(entered.length<4){toast('Masukkan 4 digit OTP','warning');return}if(entered===otpCode){showForgotStep(3);toast('OTP benar! ✅','success')}else{['otp1','otp2','otp3','otp4'].forEach(id=>{const el=document.getElementById(id);el.style.borderColor='var(--red)';setTimeout(()=>{el.style.borderColor='';el.value=''},600)});toast('OTP salah','error');document.getElementById('otp1').focus()}}
+function doResetPassword(){clearErr('new-pass-err');const p=document.getElementById('new-pass-reset').value,p2=document.getElementById('new-pass-reset2').value;if(p.length<6){showErr('new-pass-err','Password minimal 6 karakter');return}if(p!==p2){showErr('new-pass-err','Konfirmasi tidak cocok');return}const users=JSON.parse(localStorage.getItem('bbk_users')||'[]');const idx=users.findIndex(u=>u.email===forgotEmail);if(idx>=0){users[idx].password=p;localStorage.setItem('bbk_users',JSON.stringify(users))}showForgotStep(4)}
+
+// ================================================================
+// DASHBOARD
+// ================================================================
+function refreshDashboard(){if(!currentUser)return;document.getElementById('dash-name').textContent=currentUser.name.split(' ')[0]+' 👋';document.getElementById('stat-brands').textContent=brands.length;document.getElementById('stat-downloads').textContent=currentUser.downloads||0;document.getElementById('stat-status').textContent=currentUser.status==='pro'?'🚀 Pro':currentUser.status==='premium'?'⭐ Pro':'Free';renderBrandScroll()}
+function renderBrandScroll(){const scroll=document.getElementById('brand-scroll'),empty=document.getElementById('empty-brands');if(brands.length===0){empty.style.display='';scroll.innerHTML='';scroll.appendChild(empty);return}empty.style.display='none';scroll.innerHTML='';brands.forEach((b,i)=>{const c=b.colors&&b.colors[0]||'#4A90E2';const div=document.createElement('div');div.className='brand-card';div.onclick=()=>openBrand(i);div.innerHTML=`<div class="brand-card-logo" style="background:${c}">${(b.name||'B').substring(0,2).toUpperCase()}</div><div class="brand-card-name">${b.name||'Brand'}</div><div class="brand-card-cat">${b.category||''}${b.subCategory?' · '+b.subCategory:''}</div>`;scroll.appendChild(div)})}
+
+// ================================================================
+// MODULE 1: CATEGORY FLOW
+// ================================================================
+function clearSubCategoryUI(){const e=document.getElementById('sub-category-wrap');if(e)e.remove();builderState.subCategory=''}
+function handleCategoryFlow(category){clearSubCategoryUI();const flow=CATEGORY_FLOW[category];if(!flow)return;const step1=document.getElementById('step-1');const descGroup=document.getElementById('brand-desc')?.closest('.form-group');const wrap=document.createElement('div');wrap.id='sub-category-wrap';wrap.className='form-group';wrap.style.animation='fadeIn 0.35s ease';if(flow.freeText){wrap.innerHTML=`<label>${flow.emoji} ${flow.label}</label><input type="text" id="sub-cat-free" placeholder="Contoh: Otomotif, Properti…" style="width:100%;padding:13px 16px;border:1.5px solid #e2e8f0;border-radius:12px;font-family:'Poppins',sans-serif;font-size:14px;outline:none;transition:var(--transition)" oninput="builderState.subCategory=this.value" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='#e2e8f0'"><div class="form-error" id="sub-cat-err">⚠ <span>Isi kategori kustom</span></div>`}else{const h=flow.options.map(o=>`<div class="cat-option sub-cat-option" onclick="selectSubCat(this,'${o.value}')"><span class="cat-icon">${o.icon}</span><span class="cat-name">${o.label}</span></div>`).join('');wrap.innerHTML=`<label>${flow.emoji} ${flow.label}</label><div class="category-grid" id="sub-cat-grid">${h}</div><div class="form-error" id="sub-cat-err">⚠ <span>Pilih sub-kategori dulu</span></div>`}if(descGroup)step1.insertBefore(wrap,descGroup);else{const nb=step1.querySelector('.btn-primary');step1.insertBefore(wrap,nb)}}
+function selectSubCat(el,value){document.querySelectorAll('.sub-cat-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');builderState.subCategory=value;const e=document.getElementById('sub-cat-err');if(e)e.classList.remove('show')}
+function selectCat(el,cat){document.querySelectorAll('.cat-option:not(.sub-cat-option)').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');builderState.category=cat;builderState.style='';handleCategoryFlow(cat)}
+
+// ================================================================
+// MODULE 2: DYNAMIC BRAND STYLE
+// ================================================================
+function renderBrandStyle(category){const grid=document.getElementById('style-grid-dynamic');const styles=BRAND_STYLES[category]||BRAND_STYLES.Lainnya;const subtitle=document.getElementById('step2-subtitle');const labels={Fashion:'Fashion',Makanan:'Kuliner',Teknologi:'Teknologi',Kecantikan:'Kecantikan',Jasa:'Layanan Jasa',Lainnya:'Brand'};if(subtitle)subtitle.textContent=`Gaya visual untuk brand ${labels[category]||category} kamu`;grid.innerHTML='';styles.forEach(s=>{const div=document.createElement('div');div.className='style-option'+(builderState.style===s.value?' selected':'');div.innerHTML=`<div class="style-icon">${s.icon}</div><div class="style-name">${s.name}</div><div style="font-size:10px;color:var(--text3);margin-top:3px">${s.desc}</div>`;div.onclick=()=>{document.querySelectorAll('.style-option').forEach(o=>o.classList.remove('selected'));div.classList.add('selected');builderState.style=s.value};grid.appendChild(div)})}
+
+// ================================================================
+// MODULE 3: LOGO STUDIO + LOGO→MOCKUP
+// ================================================================
+function getInitials(name){return(name||'BB').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase()}
+function shortN(name,max=10){return name&&name.length>max?name.substring(0,max):name||'BRAND'}
+function isColorDark(hex){if(!hex||!hex.startsWith('#'))return true;const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);return(r*299+g*587+b*114)/1000<128}
+function buildLogoHTML(vi,name,accent,c2){const ini=getInitials(name),sn=shortN(name),gold='#C9A96E',ac=accent||gold,dark=c2||'#1a1a2e';const v=[{bg:'#000',tagBg:'#0a0a0a',tagC:gold,label:'Monogram',html:`<div style="width:64px;height:64px;border-radius:10px;background:#111;border:1.5px solid rgba(201,169,110,.25);display:flex;align-items:center;justify-content:center;flex-direction:column"><span style="font-size:26px;font-weight:800;color:${gold};font-family:'Poppins',sans-serif;line-height:1">${ini}</span><span style="font-size:7px;letter-spacing:.18em;color:rgba(201,169,110,.45);margin-top:3px;font-weight:600">BRAND</span></div>`},{bg:'#fff',tagBg:'#f5f5f5',tagC:'#888',label:'Wordmark',html:`<div style="text-align:center"><div style="font-size:${sn.length>7?13:16}px;font-weight:800;color:#0a0a0a;font-family:'Poppins',sans-serif;letter-spacing:.04em">${sn.toUpperCase()}</div><div style="font-size:7px;color:#bbb;letter-spacing:.2em;margin-top:4px;font-weight:600">BRAND STUDIO</div></div>`},{bg:'#0f0f0f',tagBg:'#111',tagC:'rgba(255,255,255,.3)',label:'Geometric',html:`<div style="display:flex;flex-direction:column;align-items:center;gap:6px"><svg width="46" height="40" viewBox="0 0 46 40"><polygon points="23,3 43,37 3,37" fill="none" stroke="${ac}" stroke-width="1.8"/><circle cx="23" cy="24" r="5" fill="${ac}"/></svg><div style="font-size:8px;color:rgba(255,255,255,.5);letter-spacing:.2em;font-weight:700">${ini}</div></div>`},{bg:'#0c0c0c',tagBg:'#111',tagC:gold,label:'Luxury',html:`<div style="text-align:center"><div style="font-size:9px;letter-spacing:.28em;color:rgba(201,169,110,.45);font-weight:500;margin-bottom:5px">— STUDIO —</div><div style="font-size:${sn.length>7?13:16}px;font-weight:700;color:${gold};font-family:'Playfair Display',serif;letter-spacing:.05em">${sn.toUpperCase()}</div><div style="width:36px;height:1px;background:linear-gradient(90deg,transparent,${gold},transparent);margin:6px auto"></div><div style="font-size:7px;letter-spacing:.2em;color:rgba(201,169,110,.4)">EST. 2024</div></div>`},{bg:'#f4f4f2',tagBg:'#eee',tagC:'#666',label:'Abstract',html:`<div style="display:flex;flex-direction:column;align-items:center;gap:7px"><svg width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="24" r="19" fill="none" stroke="${ac==='#ffffff'?dark:ac}" stroke-width="1.8"/><circle cx="24" cy="24" r="7" fill="${ac==='#ffffff'?dark:ac}"/><line x1="24" y1="5" x2="24" y2="15" stroke="${ac==='#ffffff'?dark:ac}" stroke-width="1.8"/><line x1="24" y1="33" x2="24" y2="43" stroke="${ac==='#ffffff'?dark:ac}" stroke-width="1.8"/></svg><div style="font-size:8px;font-weight:700;letter-spacing:.18em;color:#333">${ini}</div></div>`},{bg:'#fff',tagBg:'#f5f5f5',tagC:'#999',label:'Minimal',html:`<div style="display:flex;align-items:center;gap:10px"><div style="width:3px;height:46px;border-radius:2px;background:${ac==='#ffffff'?dark:ac}"></div><div><div style="font-size:${sn.length>8?11:13}px;font-weight:800;color:#0a0a0a;letter-spacing:.03em;font-family:'Poppins',sans-serif">${sn.toUpperCase()}</div><div style="font-size:7px;color:#bbb;letter-spacing:.14em;margin-top:3px;font-weight:500">BRAND</div></div></div>`}];return v[vi]||v[0]}
+function applyLogoToMockup(variantIdx){builderState.logoVariant=variantIdx;const lv=buildLogoHTML(variantIdx,builderState.name,builderState.accentColor,builderState.colors[1]);builderState.selectedLogoHTML=lv.html;builderState.selectedLogoLabel=lv.label;const preview=document.getElementById('selected-logo-preview');const render=document.getElementById('slp-render');const nameEl=document.getElementById('slp-name');if(preview&&render&&nameEl){render.style.background=lv.bg;render.innerHTML=lv.html;nameEl.textContent=`Variasi "${lv.label}"`;preview.style.display='flex'}if(currentStep===5)renderMockupDisplay()}
+function initLogoStudio(){if(!builderState.accentColor&&builderState.colors.length)builderState.accentColor=builderState.colors[0];renderLogoGrid();renderAccentSwatches();if(!builderState.selectedLogoHTML)applyLogoToMockup(builderState.logoVariant||0)}
+function renderLogoGrid(){const grid=document.getElementById('logo-grid');if(!grid)return;const name=builderState.name||'BRAND',ac=builderState.accentColor||'#C9A96E',c2=builderState.colors[1]||'#1a1a2e';grid.innerHTML='';[0,1,2,3,4,5].forEach(i=>{const vt=buildLogoHTML(i,name,ac,c2);const tile=document.createElement('div');tile.className='lv-tile'+(i===builderState.logoVariant?' sel':'');tile.innerHTML=`<div class="lv-canvas" style="background:${vt.bg}"><div class="lv-check">✓</div><div style="animation:logoFade .3s ease">${vt.html}</div></div><div class="lv-label" style="background:${vt.tagBg};color:${vt.tagC}">${vt.label}</div>`;tile.onclick=()=>{document.querySelectorAll('.lv-tile').forEach(t=>t.classList.remove('sel'));tile.classList.add('sel');applyLogoToMockup(i);toast(`Logo "${vt.label}" dipilih ✓`,'success')};grid.appendChild(tile)})}
+function renderAccentSwatches(){const cont=document.getElementById('accent-swatches');if(!cont)return;const palette=[...new Set(['#C9A96E','#ffffff','#000000','#1C1C1C',...(builderState.colors||[]),'#B88B4A'])].slice(0,8);cont.innerHTML='';palette.forEach(col=>{const sw=document.createElement('div');sw.className='ac-swatch'+(col===builderState.accentColor?' active':'');sw.style.background=col;if(col==='#ffffff')sw.style.boxShadow='inset 0 0 0 1px rgba(0,0,0,.1)';sw.onclick=()=>{builderState.accentColor=col;document.querySelectorAll('.ac-swatch').forEach(s=>s.classList.remove('active'));sw.classList.add('active');renderLogoGrid();applyLogoToMockup(builderState.logoVariant)};cont.appendChild(sw)})}
+function regenerateLogos(){const opts=['#C9A96E','#ffffff','#000000',...(builderState.colors||[]),'#B88B4A','#3498DB','#E94560'];builderState.accentColor=R(opts);builderState.logoVariant=Math.floor(Math.random()*6);renderLogoGrid();renderAccentSwatches();applyLogoToMockup(builderState.logoVariant);toast('Logo diregenerasi ✨','success')}
+
+// ================================================================
+// MODULE 4: DYNAMIC CATEGORY MOCKUP
+// ================================================================
+function getCategoryMockupTypes(cat){return MOCKUP_OPTIONS[cat]||MOCKUP_OPTIONS.Lainnya}
+function renderMockup(category,tabKey,logoHTML){
+  const name=builderState.name||'BRAND',c1=builderState.colors[0]||'#4A90E2',c2=builderState.colors[1]||'#1a1a2e';
+  const slogan=builderState.slogan||'Your Brand Story',sn=shortN(name),ini=getInitials(name);
+  const wm=(!currentUser||currentUser.status==='free')?'<div style="position:absolute;bottom:6px;right:8px;font-size:8px;opacity:.3;color:#fff;z-index:9">BBK Free</div>':'';
+  const logoMini=logoHTML?`<div style="transform:scale(0.42);transform-origin:center;display:flex;justify-content:center">${logoHTML}</div>`:`<div style="width:36px;height:36px;border-radius:8px;background:${c1};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff">${ini}</div>`;
+  if(category==='Fashion'){
+    if(tabKey==='kaos'){const isDark=isColorDark(c1),sf=isDark?c1:'#f2f2f0',st=isDark?'#fff':'#1a1a1a';return`<div style="background:${isDark?'#111':'#e8e8e4'};padding:24px;display:flex;align-items:center;justify-content:center;min-height:200px;position:relative"><div style="position:relative"><svg viewBox="0 0 140 160" width="180" height="200"><defs><filter id="tsf"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="rgba(0,0,0,0.25)"/></filter></defs><path d="M20 30L2 55 25 64 25 148 115 148 115 64 138 55 120 30 88 42Q70 48 52 42Z" fill="${sf}" filter="url(#tsf)"/><path d="M20 30L2 55 25 64 25 55Z" fill="rgba(0,0,0,.07)"/><path d="M120 30L138 55 115 64 115 55Z" fill="rgba(0,0,0,.07)"/><path d="M52 42Q70 34 88 42Q78 56 70 56Q62 56 52 42Z" fill="${isDark?'rgba(0,0,0,.2)':'rgba(255,255,255,.3)'}"/></svg><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-42%);z-index:2;pointer-events:none">${logoHTML?`<div style="transform:scale(0.44);transform-origin:center">${logoHTML}</div>`:`<div style="text-align:center;color:${st}"><div style="font-size:14px;font-weight:800">${ini}</div></div>`}</div></div>${wm}</div>`}
+    if(tabKey==='hoodie'){return`<div style="background:#0a0a0a;padding:24px;display:flex;align-items:center;justify-content:center;min-height:220px;position:relative"><div style="position:relative"><svg viewBox="0 0 160 180" width="200" height="220"><defs><filter id="hsf"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="rgba(0,0,0,0.5)"/></filter></defs><path d="M30 50 Q40 20 80 20 Q120 20 130 50 L148 75 120 85 120 165 40 165 40 85 12 75Z" fill="${c1}" filter="url(#hsf)"/><path d="M60 20 Q80 35 100 20 Q90 50 80 50 Q70 50 60 20Z" fill="rgba(0,0,0,.2)"/></svg><div style="position:absolute;top:55%;left:50%;transform:translate(-50%,-42%);z-index:2">${logoHTML?`<div style="transform:scale(0.4);transform-origin:center">${logoHTML}</div>`:`<div style="font-size:14px;font-weight:800;color:#fff;text-align:center">${ini}</div>`}</div></div>${wm}</div>`}
+    if(tabKey==='totebag'){return`<div style="background:linear-gradient(160deg,#f7f5ef,#e8e4d8);padding:20px;display:flex;align-items:center;justify-content:center;min-height:200px;position:relative"><div style="position:relative;display:inline-block"><svg viewBox="0 0 120 140" width="150" height="175"><defs><filter id="bsf"><feDropShadow dx="2" dy="6" stdDeviation="7" flood-color="rgba(0,0,0,0.2)"/></filter><linearGradient id="bgl" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f5f1e8"/><stop offset="100%" stop-color="#e0d8c4"/></linearGradient></defs><rect x="10" y="36" width="100" height="92" rx="4" fill="url(#bgl)" filter="url(#bsf)"/><rect x="10" y="36" width="100" height="14" rx="3" fill="#d9d2bc"/><path d="M33 36 Q31 10 60 10 Q89 10 87 36" fill="none" stroke="#b5a88c" stroke-width="5.5" stroke-linecap="round"/></svg><div style="position:absolute;top:52%;left:50%;transform:translate(-50%,-45%);z-index:2">${logoHTML?`<div style="transform:scale(0.42);transform-origin:center">${logoHTML}</div>`:`<div style="text-align:center"><div style="font-size:15px;font-weight:800;color:#1a1a1a">${ini}</div></div>`}</div></div>${wm}</div>`}
+    if(tabKey==='hangtag'){return`<div style="background:#f0ede8;padding:20px;display:flex;align-items:center;justify-content:center;min-height:200px;position:relative"><div style="background:#fff;border-radius:8px;padding:20px 16px;box-shadow:0 12px 40px rgba(0,0,0,.18);width:110px;text-align:center;position:relative"><div style="width:8px;height:8px;border-radius:50%;border:1.5px solid #ccc;margin:0 auto 6px"></div><div style="width:1px;height:16px;background:#ddd;margin:0 auto 12px"></div><div style="display:flex;justify-content:center;margin-bottom:10px">${logoMini}</div><div style="font-size:9px;font-weight:800;color:#1a1a2e;letter-spacing:.08em">${sn.toUpperCase()}</div><div style="width:28px;height:1px;background:${c1};margin:6px auto"></div><div style="font-size:7px;color:#94a3b8">${builderState.subCategory||'Collection'}</div></div>${wm}</div>`}
+  }
+  if(category==='Makanan'){
+    if(tabKey==='box'){return`<div style="background:linear-gradient(135deg,#f8f4ef,#eee8df);padding:20px;display:flex;align-items:center;justify-content:center;min-height:200px;position:relative"><div><div style="width:140px;height:100px;background:${c1};border-radius:8px 8px 0 0;position:relative;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.2);display:flex;flex-direction:column;align-items:center;justify-content:center"><div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.12),transparent)"></div><div style="z-index:1">${logoHTML?`<div style="transform:scale(0.38);transform-origin:center">${logoHTML}</div>`:`<div style="font-size:20px;font-weight:800;color:#fff">${ini}</div>`}<div style="font-size:7px;letter-spacing:.14em;color:rgba(255,255,255,.7);text-align:center;margin-top:2px">${sn.toUpperCase()}</div></div></div><div style="width:140px;height:50px;background:${c2};border-radius:0 0 8px 8px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 30px rgba(0,0,0,.15)"><div style="font-size:9px;color:rgba(255,255,255,.8);font-style:italic">"${slogan.substring(0,22)}"</div></div></div>${wm}</div>`}
+    if(tabKey==='cup'){return`<div style="background:linear-gradient(135deg,#f0ede8,#e5e0d8);padding:20px;display:flex;align-items:center;justify-content:center;min-height:200px;position:relative"><div style="position:relative"><svg viewBox="0 0 80 120" width="120" height="180"><defs><linearGradient id="cupg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="${c1}"/><stop offset="100%" stop-color="${c2}"/></linearGradient><filter id="cupsf"><feDropShadow dx="2" dy="8" stdDeviation="6" flood-color="rgba(0,0,0,0.25)"/></filter></defs><path d="M12 20 L8 110 Q8 118 16 118 L64 118 Q72 118 72 110 L68 20Z" fill="url(#cupg)" filter="url(#cupsf)"/><path d="M12 20 L68 20 Q70 30 68 40 L12 40 Q10 30 12 20Z" fill="rgba(255,255,255,.15)"/><ellipse cx="40" cy="20" rx="28" ry="6" fill="rgba(255,255,255,.3)"/></svg><div style="position:absolute;top:42%;left:50%;transform:translate(-50%,-40%);z-index:2">${logoHTML?`<div style="transform:scale(0.36);transform-origin:center">${logoHTML}</div>`:`<div style="font-size:14px;font-weight:800;color:#fff;text-align:center">${ini}</div>`}</div></div>${wm}</div>`}
+    if(tabKey==='paperbag'){return`<div style="background:linear-gradient(135deg,#f0ede8,#e5dfd4);padding:24px;display:flex;align-items:center;justify-content:center;min-height:200px;position:relative"><div style="background:linear-gradient(180deg,#f5f0e8,#ede5d8);border-radius:4px;padding:16px;box-shadow:0 12px 40px rgba(0,0,0,.2);min-height:140px;width:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden"><div style="position:absolute;top:0;left:0;right:0;height:6px;background:${c1}"></div><div style="margin-top:8px">${logoMini}</div><div style="font-size:8px;color:#94a3b8;margin-top:8px;font-style:italic;text-align:center">"${slogan.substring(0,18)}"</div><div style="position:absolute;top:6px;left:30px;width:60px;height:16px;border-radius:100px;background:linear-gradient(90deg,#c4b89a,#d4c8aa);box-shadow:0 2px 8px rgba(0,0,0,.15)"></div></div>${wm}</div>`}
+  }
+  if(category==='Teknologi'){
+    if(tabKey==='appui'){return`<div style="background:#0a0a1a;padding:16px;position:relative;min-height:200px"><div style="background:#111827;border-radius:20px;overflow:hidden;max-width:180px;margin:0 auto;box-shadow:0 20px 60px rgba(0,0,0,.6)"><div style="background:linear-gradient(135deg,${c1},${c2});padding:20px 14px;text-align:center;position:relative;overflow:hidden"><div style="display:flex;justify-content:center;margin-bottom:10px">${logoHTML?`<div style="transform:scale(0.38);transform-origin:center">${logoHTML}</div>`:`<div style="width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff">${ini}</div>`}</div><div style="font-size:13px;font-weight:700;color:#fff">${sn}</div><div style="font-size:9px;color:rgba(255,255,255,.6);margin-top:2px">${builderState.subCategory||'Platform'}</div></div><div style="padding:12px;background:#111827"><div style="display:flex;gap:6px;margin-bottom:8px">${[0,1,2].map(()=>`<div style="flex:1;height:28px;border-radius:8px;background:rgba(255,255,255,.06)"></div>`).join('')}</div><div style="height:6px;border-radius:100px;background:${c1};width:70%;margin-bottom:6px"></div><div style="height:6px;border-radius:100px;background:rgba(255,255,255,.08);width:90%"></div></div></div>${wm}</div>`}
+    if(tabKey==='laptop'){return`<div style="background:#1a1a2e;padding:20px;display:flex;align-items:center;justify-content:center;min-height:220px;position:relative"><div><div style="background:#0f172a;border-radius:10px 10px 0 0;padding:8px;box-shadow:0 0 60px rgba(74,144,226,.2)"><div style="background:linear-gradient(135deg,${c1},${c2});border-radius:6px;padding:14px;min-width:200px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">${logoHTML?`<div style="transform:scale(0.32);transform-origin:left center;flex-shrink:0">${logoHTML}</div>`:`<div style="width:24px;height:24px;border-radius:6px;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff">${ini}</div>`}<div style="font-size:11px;font-weight:700;color:#fff;margin-left:4px">${sn} Dashboard</div></div><div style="height:5px;border-radius:100px;background:rgba(255,255,255,.3);width:80%;margin-bottom:5px"></div><div style="height:5px;border-radius:100px;background:rgba(255,255,255,.15);width:60%"></div><div style="display:flex;gap:5px;margin-top:10px">${[0,1,2].map(()=>`<div style="flex:1;height:30px;border-radius:6px;background:rgba(255,255,255,.1)"></div>`).join('')}</div></div></div><div style="background:#334155;height:6px;border-radius:0 0 4px 4px"></div><div style="background:#475569;height:4px;border-radius:0 0 8px 8px;width:120%;margin-left:-10%"></div></div>${wm}</div>`}
+    if(tabKey==='dashboard'){return`<div style="background:#0f172a;padding:16px;min-height:200px;position:relative"><div style="max-width:280px;margin:0 auto"><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:8px 12px;background:#1e293b;border-radius:10px">${logoHTML?`<div style="transform:scale(0.28);transform-origin:left center;flex-shrink:0;margin-right:-18px">${logoHTML}</div>`:`<div style="width:24px;height:24px;border-radius:6px;background:${c1};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff">${ini}</div>`}<div style="font-size:11px;font-weight:700;color:#fff;margin-left:4px">${sn}</div><div style="margin-left:auto;font-size:8px;color:${c1};font-weight:700">LIVE</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">${['Users','Revenue','Growth','Active'].map((l,i)=>`<div style="background:#1e293b;border-radius:8px;padding:10px;border-left:3px solid ${builderState.colors[i%4]||c1}"><div style="font-size:9px;color:#64748b;margin-bottom:4px">${l}</div><div style="font-size:14px;font-weight:700;color:#fff">${['12.4K','Rp 2.1M','+24%','98%'][i]}</div></div>`).join('')}</div></div>${wm}</div>`}
+  }
+  if(category==='Kecantikan'){
+    if(tabKey==='bottle'){return`<div style="background:linear-gradient(135deg,#fdf0f5,#f5e8f0);padding:24px;display:flex;align-items:center;justify-content:center;min-height:220px;position:relative"><div style="display:flex;gap:14px;align-items:flex-end">${[{h:150,w:42},{h:110,w:36},{h:90,w:52}].map((b,i)=>`<div style="width:${b.w}px;height:${b.h}px;background:linear-gradient(180deg,${builderState.colors[i]||c1},${builderState.colors[(i+1)%4]||c2});border-radius:${b.w/2}px ${b.w/2}px ${b.w/3}px ${b.w/3}px;box-shadow:0 10px 30px rgba(0,0,0,.18);position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center"><div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent)"></div>${i===0?`<div style="z-index:1">${logoHTML?`<div style="transform:scale(0.3);transform-origin:center">${logoHTML}</div>`:`<div style="font-size:11px;font-weight:800;color:#fff">${ini}</div>`}</div>`:''}</div>`).join('')}</div>${wm}</div>`}
+    if(tabKey==='cosmbox'){return`<div style="background:linear-gradient(135deg,#fdf5f0,#f5ece8);padding:20px;display:flex;align-items:center;justify-content:center;min-height:200px;position:relative"><div style="width:130px;background:linear-gradient(135deg,${c1},${c2});border-radius:8px;box-shadow:0 15px 45px rgba(0,0,0,.25);overflow:hidden"><div style="padding:20px;text-align:center;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden"><div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.1),transparent)"></div><div style="z-index:1">${logoHTML?`<div style="transform:scale(0.38);transform-origin:center">${logoHTML}</div>`:`<div style="font-size:22px;font-weight:800;color:#fff">${ini}</div>`}<div style="font-size:8px;letter-spacing:.16em;color:rgba(255,255,255,.6);margin-top:6px">${sn.toUpperCase()}</div></div></div><div style="background:rgba(0,0,0,.15);padding:8px;text-align:center"><div style="font-size:7px;color:rgba(255,255,255,.5)">50ml · Made with Love</div></div></div>${wm}</div>`}
+    if(tabKey==='label'){return`<div style="background:linear-gradient(135deg,#fafaf8,#f0ede8);padding:24px;display:flex;align-items:center;justify-content:center;min-height:200px;position:relative"><div style="background:#fff;border-radius:8px;padding:16px;width:140px;box-shadow:0 10px 40px rgba(0,0,0,.15);text-align:center"><div style="width:100%;height:3px;background:linear-gradient(90deg,${c1},${c2});border-radius:100px;margin-bottom:12px"></div><div style="display:flex;justify-content:center;margin-bottom:8px">${logoMini}</div><div style="font-size:11px;font-weight:800;color:#1a1a2e;letter-spacing:.06em">${sn.toUpperCase()}</div><div style="font-size:8px;color:#94a3b8;margin-top:3px">${builderState.subCategory||'Premium Skincare'}</div><div style="width:100%;height:1px;background:#f1f5f9;margin:8px 0"></div><div style="font-size:7px;color:#b0bec5">50ml · Natural Ingredients</div></div>${wm}</div>`}
+  }
+  if(category==='Jasa'){
+    if(tabKey==='web'){return`<div style="background:#f1f5f9;padding:16px;min-height:220px;position:relative"><div style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.12)"><div style="background:#f8fafc;padding:8px 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #e2e8f0"><div style="display:flex;gap:4px">${['#ff5f56','#ffbd2e','#27c93f'].map(c=>`<div style="width:8px;height:8px;border-radius:50%;background:${c}"></div>`).join('')}</div><div style="flex:1;background:#e2e8f0;border-radius:4px;height:16px;display:flex;align-items:center;padding:0 8px;font-size:8px;color:#94a3b8">www.${sn.toLowerCase().replace(/\s+/g,'')}.com</div></div><div style="background:linear-gradient(135deg,${c1},${c2});padding:20px;display:flex;align-items:center;gap:12px">${logoHTML?`<div style="transform:scale(0.36);transform-origin:left center;flex-shrink:0">${logoHTML}</div>`:`<div style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff">${ini}</div>`}<div style="margin-left:${logoHTML?4:0}px"><div style="font-size:13px;font-weight:700;color:#fff">${sn}</div><div style="font-size:9px;color:rgba(255,255,255,.7)">${builderState.subCategory||'Professional Services'}</div></div></div><div style="padding:12px"><div style="height:6px;border-radius:100px;background:#e2e8f0;width:80%;margin-bottom:5px"></div><div style="height:6px;border-radius:100px;background:#e2e8f0;width:60%;margin-bottom:10px"></div><div style="background:${c1};color:#fff;border-radius:100px;padding:6px 14px;font-size:9px;font-weight:700;display:inline-block">Hubungi Kami →</div></div></div>${wm}</div>`}
+    if(tabKey==='letterhead'){return`<div style="background:#f8f9fa;padding:16px;min-height:220px;position:relative"><div style="background:#fff;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden;max-width:220px;margin:0 auto"><div style="background:linear-gradient(135deg,${c1},${c2});padding:14px;display:flex;align-items:center;justify-content:space-between">${logoHTML?`<div style="transform:scale(0.35);transform-origin:left center">${logoHTML}</div>`:`<div style="font-size:16px;font-weight:800;color:#fff">${ini}</div>`}<div style="text-align:right"><div style="font-size:9px;font-weight:700;color:#fff">${sn}</div><div style="font-size:7px;color:rgba(255,255,255,.6)">${builderState.subCategory||'Professional'}</div></div></div><div style="padding:14px">${[90,75,80,60,70].map(w=>`<div style="height:5px;border-radius:100px;background:#f1f5f9;width:${w}%;margin-bottom:5px"></div>`).join('')}</div><div style="background:${c1}22;border-top:2px solid ${c1};padding:8px 14px;display:flex;justify-content:space-between"><div style="font-size:7px;color:${c1}">📧 hello@${sn.toLowerCase()}.com</div><div style="font-size:7px;color:${c1}">📱 +62 812-0000</div></div></div>${wm}</div>`}
+  }
+  if(tabKey==='card'){return`<div style="background:linear-gradient(135deg,#f5f5f3,#eaeae6);padding:20px;display:flex;align-items:center;justify-content:center;min-height:200px"><div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:240px"><div style="background:linear-gradient(135deg,${c1},${c2});border-radius:12px;padding:18px 16px;position:relative;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.22);transform:rotate(-1.5deg)"><div style="position:absolute;right:-18px;top:-18px;width:64px;height:64px;background:rgba(255,255,255,.07);border-radius:50%"></div><div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">${logoHTML?`<div style="transform:scale(0.32);transform-origin:left center;flex-shrink:0;margin-right:-16px">${logoHTML}</div>`:''}<div style="font-size:14px;font-weight:800;color:#fff;margin-left:${logoHTML?6:0}px">${sn}</div></div><div style="font-size:8px;color:rgba(255,255,255,.6);font-style:italic">"${slogan.substring(0,22)}"</div></div><div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:12px 14px;box-shadow:0 4px 14px rgba(0,0,0,.08);transform:rotate(.8deg)"><div style="font-size:9px;font-weight:700;color:#1a1a2e;margin-bottom:6px">${name}</div><div style="font-size:8px;color:#94a3b8">📧 hello@${sn.toLowerCase().replace(/\s+/g,'')}.com</div></div></div>${wm}</div>`}
+  return`<div style="background:#fff;min-height:200px"><div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #f0f0f0"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,${c1},${c2});display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0">${name.substring(0,1)}</div><div><div style="font-size:12px;font-weight:700;color:#1a1a2e">${sn.toLowerCase().replace(/\s+/g,'_')}</div><div style="font-size:10px;color:#94a3b8">Sponsored</div></div><div style="margin-left:auto;font-size:18px;color:#94a3b8">⋯</div></div><div style="background:linear-gradient(135deg,${c1},${c2});min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;position:relative;overflow:hidden"><div style="margin-bottom:8px;display:flex;justify-content:center">${logoHTML?`<div style="transform:scale(0.46);transform-origin:center">${logoHTML}</div>`:`<div style="width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff">${ini}</div>`}</div><div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:5px">${sn}</div><div style="font-size:11px;color:rgba(255,255,255,.75);font-style:italic;margin-bottom:14px">"${slogan.substring(0,28)}"</div><div style="background:rgba(255,255,255,.22);border:1.5px solid rgba(255,255,255,.45);padding:8px 20px;border-radius:100px;font-size:11px;font-weight:700;color:#fff">Shop Now →</div>${wm}</div><div style="padding:10px 14px"><div style="display:flex;gap:14px;font-size:22px;color:#333;margin-bottom:8px">♡ 💬 ↗</div><div style="font-size:11px;font-weight:700;color:#1a1a2e">1,234 likes</div><div style="font-size:11px;color:#64748b;margin-top:3px"><span style="font-weight:700;color:#1a1a2e">${sn.toLowerCase().replace(/\s+/g,'_')}</span> ${slogan}</div></div></div>`;
+}
+
+// ================================================================
+// MODULE 5: MOCKUP STEP
+// ================================================================
+function initMockupStep(){activeMockupTab=0;const cat=builderState.category||'Lainnya';const types=getCategoryMockupTypes(cat);const subtitle=document.getElementById('step5-subtitle');if(subtitle)subtitle.textContent=`Mockup khusus ${cat} · logo terpilih sudah diterapkan`;const tabBar=document.getElementById('mockup-tabs');tabBar.innerHTML='';types.forEach((item,i)=>{const tab=document.createElement('div');tab.className='mkp-tab'+(i===0?' active':'');tab.textContent=item.label;tab.onclick=()=>{activeMockupTab=i;document.querySelectorAll('.mkp-tab').forEach(t=>t.classList.remove('active'));tab.classList.add('active');renderMockupDisplay()};tabBar.appendChild(tab)});renderPaletteChips();renderFontPairs();const lv=buildLogoHTML(builderState.logoVariant,builderState.name,builderState.accentColor,builderState.colors[1]);const sync=document.getElementById('sync-text');if(sync)sync.textContent=`Logo "${lv.label}" diterapkan ke semua mockup`;renderMockupDisplay()}
+function renderMockupDisplay(){const display=document.getElementById('mockup-display');if(!display)return;const cat=builderState.category||'Lainnya';const types=getCategoryMockupTypes(cat);const tabKey=types[activeMockupTab]?.key||'feed';const lv=buildLogoHTML(builderState.logoVariant,builderState.name,builderState.accentColor,builderState.colors[1]);const sync=document.getElementById('sync-text');if(sync)sync.textContent=`Logo "${lv.label}" diterapkan ke semua mockup`;display.innerHTML=renderMockup(cat,tabKey,lv.html)}
+function renderPaletteChips(){const cont=document.getElementById('pgs-chips');if(!cont)return;cont.innerHTML='';(builderState.colors||[]).forEach((c,i)=>{const chip=document.createElement('div');chip.className='pgc'+(i===0?' active':'');chip.style.background=c;chip.title=c;chip.onclick=()=>{document.querySelectorAll('.pgc').forEach(p=>p.classList.remove('active'));chip.classList.add('active');toast('Warna '+c,'success')};cont.appendChild(chip)})}
+function renderFontPairs(){const cont=document.getElementById('fr-pairs');if(!cont)return;cont.innerHTML='';FONT_PAIRS.forEach((pair,i)=>{const div=document.createElement('div');div.className='fr-pair'+(i===0?' active':'');div.innerHTML=`<div class="fr-name" style="font-family:'${pair.display}',Poppins,sans-serif">${pair.display}</div><div class="fr-sub">${pair.body}</div>`;div.onclick=()=>{document.querySelectorAll('.fr-pair').forEach(p=>p.classList.remove('active'));div.classList.add('active');builderState.font=pair.display;toast('Font: '+pair.name,'success')};cont.appendChild(div)})}
+function openMockupFull(){const display=document.getElementById('mockup-display');const cat=builderState.category||'Lainnya';const types=getCategoryMockupTypes(cat);document.getElementById('mkp-modal-title').textContent=types[activeMockupTab]?.label||'Mockup Preview';document.getElementById('mkp-modal-content').innerHTML=display?display.innerHTML:'';document.getElementById('mkp-modal').classList.add('show')}
+function closeMkpModal(){document.getElementById('mkp-modal').classList.remove('show')}
+function downloadMockup(){closeMkpModal();if(currentUser&&(currentUser.status==='premium'||currentUser.status==='pro'))toast('Mockup didownload (HD)! ✅','success');else toast('Download berhasil + watermark. Upgrade untuk HD!','info');if(currentUser){currentUser.downloads=(currentUser.downloads||0)+1;localStorage.setItem('bbk_user',JSON.stringify(currentUser))}}
+
+// ================================================================
+// BUILDER STEP NAVIGATION
+// ================================================================
+function prevStep(){if(currentStep===1)return;document.getElementById('step-'+currentStep).classList.remove('active');document.getElementById('sdot-'+(currentStep-1)).classList.remove('active');currentStep--;document.getElementById('step-'+currentStep).classList.add('active');document.getElementById('sdot-'+(currentStep-1)).classList.remove('done');document.getElementById('sdot-'+(currentStep-1)).classList.add('active');document.getElementById('step-num').textContent=currentStep;document.getElementById('progress-fill').style.width=(currentStep/6*100)+'%'}
+function nextStep(){
+  if(currentStep===1){const name=document.getElementById('brand-name-input').value.trim();if(!name){toast('Masukkan nama brand dulu','error');return}if(!builderState.category){toast('Pilih kategori brand','error');return}const flow=CATEGORY_FLOW[builderState.category];if(flow){if(flow.freeText){const val=(document.getElementById('sub-cat-free')?.value||'').trim();if(!val){const e=document.getElementById('sub-cat-err');if(e)e.classList.add('show');toast('Isi kategori kustom kamu dulu','error');return}builderState.subCategory=val}else if(!builderState.subCategory){const e=document.getElementById('sub-cat-err');if(e)e.classList.add('show');toast('Pilih sub-kategori dulu','error');return}}builderState.name=name;builderState.desc=document.getElementById('brand-desc').value}
+  if(currentStep===1)renderBrandStyle(builderState.category);
+  if(currentStep===2&&!builderState.style){toast('Pilih gaya brand dulu','error');return}
+  if(currentStep===3&&!builderState.colors.length){toast('Generate identitas dulu','error');return}
+  document.getElementById('step-'+currentStep).classList.remove('active');document.getElementById('sdot-'+(currentStep-1)).classList.remove('active');document.getElementById('sdot-'+(currentStep-1)).classList.add('done');currentStep++;document.getElementById('step-'+currentStep).classList.add('active');document.getElementById('sdot-'+(currentStep-1)).classList.add('active');document.getElementById('step-num').textContent=currentStep;document.getElementById('progress-fill').style.width=(currentStep/6*100)+'%';
+  if(currentStep===4)initLogoStudio();if(currentStep===5)initMockupStep();if(currentStep===6)renderBuilderTemplates();
+}
+function generateIdentity(){if(!builderState.style){toast('Pilih gaya brand dulu','warning');return}showLoading('Generating Identitas...','Membuat warna, font, dan slogan brand kamu');setTimeout(()=>{const colors=genPalette(builderState.style),font=genFont(builderState.style),slogan=genSlogan(builderState.style);const subCatLabel=builderState.subCategory?' khusus '+builderState.subCategory:'';const desc=genDesc(builderState.name,(builderState.category||'')+subCatLabel,builderState.style);builderState.colors=colors;builderState.font=font;builderState.slogan=slogan;builderState.generatedDesc=desc;if(!builderState.accentColor)builderState.accentColor=colors[0];const pd=document.getElementById('palette-display');pd.innerHTML='';colors.forEach(c=>{const sw=document.createElement('div');sw.className='palette-swatch';sw.style.background=c;sw.innerHTML=`<div class="swatch-hex">${c}</div>`;pd.appendChild(sw)});document.getElementById('font-display').textContent=builderState.name||'Brand Name';document.getElementById('font-display').style.fontFamily=font+',Poppins,sans-serif';document.getElementById('slogan-display').textContent='"'+slogan+'"';document.getElementById('brand-desc-gen').textContent=desc;document.getElementById('identity-result').classList.add('show');document.getElementById('btn-next-3').disabled=false;hideLoading();toast('Identitas brand berhasil digenerate! ✨','success')},1800)}
+function saveBrand(){showLoading('Menyimpan Brand...','Mohon tunggu sebentar');setTimeout(()=>{const brand={id:editingBrandId||Date.now(),name:builderState.name,category:builderState.category,subCategory:builderState.subCategory||'',style:builderState.style,colors:builderState.colors,font:builderState.font,slogan:builderState.slogan,desc:builderState.generatedDesc,logoVariant:builderState.logoVariant,accentColor:builderState.accentColor,selectedLogoHTML:builderState.selectedLogoHTML,selectedLogoLabel:builderState.selectedLogoLabel,createdAt:new Date().toLocaleDateString('id-ID')};if(editingBrandId)brands=brands.map(b=>b.id===editingBrandId?brand:b);else brands.push(brand);localStorage.setItem('bbk_brands',JSON.stringify(brands));hideLoading();toast('Brand berhasil disimpan! 🎉','success');resetBuilder();setTimeout(()=>goTo('dashboard'),600)},1500)}
+function resetBuilder(){currentStep=1;builderState={name:'',category:'',subCategory:'',desc:'',style:'',colors:[],font:'',slogan:'',logoVariant:0,accentColor:'',generatedDesc:'',selectedLogoHTML:'',selectedLogoLabel:''};document.querySelectorAll('.builder-step').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.step-dot').forEach(d=>d.classList.remove('active','done'));document.getElementById('step-1').classList.add('active');document.getElementById('sdot-0').classList.add('active');document.getElementById('step-num').textContent='1';document.getElementById('progress-fill').style.width='16.6%';document.getElementById('brand-name-input').value='';document.getElementById('brand-desc').value='';document.querySelectorAll('.cat-option,.style-option').forEach(o=>o.classList.remove('selected'));document.getElementById('identity-result').classList.remove('show');document.getElementById('btn-next-3').disabled=true;const slp=document.getElementById('selected-logo-preview');if(slp)slp.style.display='none';clearSubCategoryUI();editingBrandId=null}
+
+// ================================================================
+// TEMPLATE & EDITOR
+// ================================================================
+function renderBuilderTemplates(){const name=builderState.name||'BRAND',c1=builderState.colors[0]||'#4A90E2',c2=builderState.colors[1]||'#1a56b0';const grid=document.getElementById('builder-templates-grid');grid.innerHTML='';[{bg:`linear-gradient(135deg,${c1},${c2})`,html:`<div style="font-size:10px;opacity:.7;color:#fff">${name}</div><div style="font-size:18px;font-weight:800;color:#fff">SALE 50%</div>`,label:'Promo'},{bg:'#fff',html:`<div style="color:${c1};font-size:11px;font-weight:700;margin-bottom:6px">${name}</div><div style="color:#1a1a2e;font-size:14px;font-weight:700">New Collection</div>`,label:'Story'},{bg:`linear-gradient(90deg,${c2},${c1})`,html:`<div style="font-size:13px;font-weight:800;color:#fff">GRAND OPENING</div>`,label:'Banner'},{bg:`linear-gradient(135deg,${c1}88,${c2})`,html:`<div style="font-size:22px">⚡</div><div style="font-size:12px;font-weight:700;color:#fff">Flash!</div>`,label:'Flash'}].forEach((t,i)=>{const div=document.createElement('div');div.className='template-card';div.innerHTML=`<div class="template-preview" style="background:${t.bg}">${t.html}</div><div class="template-label">${t.label}</div>`;div.onclick=()=>openTemplate(i);grid.appendChild(div)})}
+let currentCanvasBg='linear-gradient(135deg,#4A90E2,#1a56b0)';
+function openTemplate(idx){const tpl=allTemplates[idx]||allTemplates[0];currentTemplateId=idx;document.getElementById('editor-title').textContent=tpl.name;const bName=(currentBrand&&currentBrand.name)||builderState.name||tpl.brand;document.getElementById('ctrl-title').value=tpl.mainTitle;document.getElementById('ctrl-sub').value=tpl.sub;document.getElementById('ctrl-brand').value=bName;document.getElementById('ctrl-cta').value='Shop Now →';currentCanvasBg=tpl.bg;uploadedImage=null;renderEditorCanvas(tpl.bg,tpl.mainTitle,tpl.sub,bName,tpl.layout||0);screenHistory.push('editor');document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-editor').classList.add('active')}
+function selectEditorFont(el,font){document.querySelectorAll('.font-chip').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');editorFont=font;updateCanvas()}
+function setCanvasBg(bg,btn){currentCanvasBg=bg;document.querySelectorAll('.color-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updateCanvas()}
+function updateCanvas(){const t=document.getElementById('ctrl-title').value,s=document.getElementById('ctrl-sub').value,b=document.getElementById('ctrl-brand').value,cta=document.getElementById('ctrl-cta').value||'Shop Now →';const tpl=allTemplates[currentTemplateId]||allTemplates[0];renderEditorCanvas(currentCanvasBg,t,s,b,tpl.layout||0,cta)}
+function renderEditorCanvas(bg,title,sub,brand,layout,cta='Shop Now →'){const canvas=document.getElementById('editor-canvas');const isLight=bg==='#ffffff',tc=isLight?'#1a1a2e':'#ffffff',tc2=isLight?'#64748b':'rgba(255,255,255,0.75)';const btnBg=isLight?'#4A90E2':'rgba(255,255,255,0.2)',ff=editorFont||'Poppins';const wm=currentUser&&(currentUser.status==='premium'||currentUser.status==='pro')?'':`<div style="position:absolute;bottom:8px;right:10px;font-size:9px;opacity:.35;color:${tc}">BBK Free</div>`;const imgHtml=uploadedImage?`<img src="${uploadedImage}" style="width:80px;height:60px;object-fit:cover;border-radius:8px;margin:8px 0">`:'';if(layout===2){canvas.innerHTML=`<div style="background:${bg};padding:28px 20px;display:flex;align-items:center;justify-content:space-between;min-height:120px;position:relative;overflow:hidden;font-family:${ff},Poppins,sans-serif"><div style="color:${tc}"><div style="font-size:11px;opacity:.6;letter-spacing:.1em;margin-bottom:4px">${brand}</div><div style="font-size:20px;font-weight:800">${title}</div><div style="font-size:11px;opacity:.8;margin-top:4px">${sub}</div></div><div style="background:${btnBg};padding:10px 16px;border-radius:100px;color:#fff;font-size:11px;font-weight:700">${cta}</div>${wm}</div>`}else if(layout===4){canvas.innerHTML=`<div style="background:${bg};min-height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;position:relative;font-family:${ff},Poppins,sans-serif"><div style="font-size:32px;margin-bottom:12px">⭐⭐⭐⭐⭐</div><div style="font-size:20px;font-weight:700;color:#1a1a2e;font-style:italic;margin-bottom:8px">"${title}"</div><div style="font-size:13px;color:#64748b;margin-bottom:20px">${sub}</div><div style="font-size:12px;font-weight:700;color:#4A90E2">${brand}</div>${wm}</div>`}else if(layout===3){canvas.innerHTML=`<div style="background:${bg};min-height:260px;display:flex;align-items:center;justify-content:space-between;padding:28px;position:relative;font-family:${ff},Poppins,sans-serif"><div style="color:${tc};flex:1"><div style="font-size:11px;opacity:.6;letter-spacing:.1em;margin-bottom:8px">${brand}</div><div style="font-size:22px;font-weight:800;margin-bottom:6px">${title}</div><div style="font-size:12px;opacity:.8;margin-bottom:16px">${sub}</div><div style="display:inline-block;background:${btnBg};padding:10px 20px;border-radius:100px;color:#fff;font-size:12px;font-weight:700">${cta}</div></div>${imgHtml}${wm}</div>`}else{canvas.innerHTML=`<div style="background:${bg};min-height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;position:relative;overflow:hidden;font-family:${ff},Poppins,sans-serif"><div style="font-size:11px;font-weight:700;letter-spacing:.12em;opacity:.7;color:${tc};margin-bottom:10px">${brand.toUpperCase()}</div><div style="font-size:30px;font-weight:800;color:${tc};letter-spacing:-.5px;margin-bottom:6px">${title}</div><div style="font-size:13px;color:${tc2};margin-bottom:20px">${sub}</div>${layout===1?imgHtml:''}<div style="background:${btnBg};padding:10px 24px;border-radius:100px;color:#fff;font-size:12px;font-weight:700">${cta}</div>${wm}</div>`}}
+function addShape(type){const div=document.getElementById('editor-canvas').querySelector('div');if(!div)return;const el=document.createElement('div');if(type==='rect')el.style.cssText='position:absolute;width:80px;height:40px;background:rgba(255,255,255,.2);border-radius:6px;top:20px;left:20px;cursor:move';else if(type==='circle')el.style.cssText='position:absolute;width:50px;height:50px;background:rgba(255,255,255,.2);border-radius:50%;top:20px;right:20px;cursor:move';else el.style.cssText='position:absolute;height:2px;background:rgba(255,255,255,.4);width:80%;left:10%;bottom:30px;cursor:move';div.style.position='relative';div.appendChild(el);let mx=0,my=0;el.addEventListener('mousedown',e=>{e.preventDefault();mx=e.clientX;my=e.clientY;document.addEventListener('mousemove',drag);document.addEventListener('mouseup',()=>document.removeEventListener('mousemove',drag))});function drag(e){const dx=e.clientX-mx,dy=e.clientY-my;mx=e.clientX;my=e.clientY;el.style.left=(el.offsetLeft+dx)+'px';el.style.top=(el.offsetTop+dy)+'px'}toast('Elemen ditambahkan','success')}
+function handleImageUpload(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{uploadedImage=ev.target.result;updateCanvas();toast('Gambar diupload!','success')};reader.readAsDataURL(file)}
+function previewTemplate(){document.getElementById('preview-modal-content').innerHTML=document.getElementById('editor-canvas').innerHTML;document.getElementById('preview-modal').classList.add('show')}
+function closePreview(){document.getElementById('preview-modal').classList.remove('show')}
+function downloadTemplate(){closePreview();if(currentUser&&(currentUser.status==='premium'||currentUser.status==='pro'))toast('Download HD berhasil! ✅','success');else toast('Download berhasil (watermark). Upgrade untuk HD!','info');if(!currentUser)return;currentUser.downloads=(currentUser.downloads||0)+1;localStorage.setItem('bbk_user',JSON.stringify(currentUser));const users=JSON.parse(localStorage.getItem('bbk_users')||'[]');const idx=users.findIndex(u=>u.email===currentUser.email);if(idx>=0){users[idx].downloads=currentUser.downloads;localStorage.setItem('bbk_users',JSON.stringify(users))}}
+function renderAllTemplates(filter='all'){const grid=document.getElementById('all-templates-grid');if(!grid)return;const filtered=filter==='all'?allTemplates:allTemplates.filter(t=>t.type===filter);grid.innerHTML='';filtered.forEach(t=>{const isLight=t.bg==='#ffffff',tc=isLight?'#1a1a2e':'#fff';const card=document.createElement('div');card.className='tpl-card';card.innerHTML=`<div class="tpl-preview" style="background:${t.bg}"><div style="color:${tc};text-align:center"><div style="font-size:14px;font-weight:800">${t.mainTitle}</div><div style="font-size:9px;opacity:.8;margin-top:4px">${t.sub}</div></div></div><div class="tpl-info"><div class="tpl-name">${t.name}</div><div class="tpl-type">${{promo:'Post Promo',story:'Story 9:16',banner:'Banner',produk:'Produk',testimoni:'Testimoni'}[t.type]||t.type}</div></div>`;card.onclick=()=>openTemplate(t.id);grid.appendChild(card)})}
+function filterTemplates(type,el){document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');renderAllTemplates(type)}
+
+// ================================================================
+// BRANDS LIST / DETAIL
+// ================================================================
+function refreshBrandsList(){const list=document.getElementById('brands-full-list');if(brands.length===0){list.innerHTML='<div style="text-align:center;padding:40px"><div style="font-size:40px;margin-bottom:12px">🎨</div><p style="color:var(--text2);margin-bottom:16px">Belum ada brand</p><button class="btn btn-primary" onclick="goTo(\'builder\')">+ Buat Brand Pertama</button></div>';return}list.innerHTML='';brands.forEach((b,i)=>{const c=b.colors&&b.colors[0]||'#4A90E2';const div=document.createElement('div');div.className='card';div.style.cursor='pointer';div.innerHTML=`<div style="display:flex;align-items:center;gap:14px"><div style="width:52px;height:52px;border-radius:12px;background:${c};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff;flex-shrink:0">${(b.name||'B').substring(0,2).toUpperCase()}</div><div style="flex:1"><div style="font-size:15px;font-weight:700">${b.name}</div><div style="font-size:12px;color:var(--text2);margin-top:2px">${b.category||''}${b.subCategory?' › '+b.subCategory:''} · ${b.style||''}</div><div style="font-size:11px;color:var(--text3);margin-top:2px">${b.createdAt||'Baru saja'}</div></div><div style="color:var(--text3);font-size:20px">›</div></div>`;div.onclick=()=>openBrand(i);list.appendChild(div)})}
+function openBrand(idx){currentBrand=brands[idx];currentBrand._idx=idx;const c=currentBrand.colors&&currentBrand.colors[0]||'#4A90E2';document.getElementById('bd-logo').style.background=c;document.getElementById('bd-logo').textContent=(currentBrand.name||'B').substring(0,2).toUpperCase();document.getElementById('bd-name').textContent=currentBrand.name;document.getElementById('bd-slogan').textContent='"'+(currentBrand.slogan||'')+'"';const pp=document.getElementById('bd-palette');pp.innerHTML='';(currentBrand.colors||[]).forEach(col=>{const div=document.createElement('div');div.className='palette-block';div.innerHTML=`<div class="palette-block-color" style="background:${col}"></div><div class="palette-block-hex">${col}</div>`;pp.appendChild(div)});document.getElementById('bd-font').textContent=currentBrand.name;document.getElementById('bd-font').style.fontFamily=(currentBrand.font||'Poppins')+',sans-serif';builderState={...currentBrand,logoVariant:currentBrand.logoVariant||0,accentColor:currentBrand.accentColor||c,selectedLogoHTML:currentBrand.selectedLogoHTML||'',selectedLogoLabel:currentBrand.selectedLogoLabel||''};activeMockupTab=0;const disp=document.getElementById('bd-mockup-display');if(disp){const cat=currentBrand.category||'Lainnya';const types=getCategoryMockupTypes(cat);const tabKey=types[0]?.key||'feed';const lv=buildLogoHTML(currentBrand.logoVariant||0,currentBrand.name,currentBrand.accentColor||c,currentBrand.colors?currentBrand.colors[1]:'#1a1a2e');disp.innerHTML=renderMockup(cat,tabKey,lv.html)}screenHistory.push('brand');document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-brand').classList.add('active')}
+function deleteBrand(){if(!confirm('Hapus brand ini?'))return;brands.splice(currentBrand._idx,1);localStorage.setItem('bbk_brands',JSON.stringify(brands));toast('Brand dihapus','info');goTo('dashboard')}
+function editBrand(){editingBrandId=currentBrand.id;builderState={...currentBrand,logoVariant:currentBrand.logoVariant||0};document.getElementById('brand-name-input').value=currentBrand.name||'';document.getElementById('brand-desc').value=currentBrand.desc||'';goTo('builder');toast('Mode edit aktif','info')}
+function downloadBrand(){downloadTemplate()}
+
+// ================================================================
+// PROFILE / SETTINGS / SUBSCRIPTION
+// ================================================================
+function refreshProfile(){if(!currentUser)return;document.getElementById('profile-name-display').textContent=currentUser.name;document.getElementById('profile-email-display').textContent=currentUser.email;const badge=document.getElementById('profile-badge');badge.textContent=currentUser.status==='pro'?'🚀 Pro':currentUser.status==='premium'?'⭐ Premium':'Free';if(currentUser.status==='premium'||currentUser.status==='pro')badge.classList.add('premium');document.getElementById('ps-brands').textContent=brands.length;document.getElementById('ps-downloads').textContent=currentUser.downloads||0;document.getElementById('ps-templates').textContent=brands.length*3;const init=currentUser.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();document.getElementById('profile-avatar-initials').textContent=init;if(currentUser.avatar){document.getElementById('profile-avatar-img').src=currentUser.avatar;document.getElementById('profile-avatar-img').style.display='block';document.getElementById('profile-avatar-initials').style.display='none'}}
+function uploadAvatar(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{currentUser.avatar=ev.target.result;localStorage.setItem('bbk_user',JSON.stringify(currentUser));document.getElementById('profile-avatar-img').src=ev.target.result;document.getElementById('profile-avatar-img').style.display='block';document.getElementById('profile-avatar-initials').style.display='none';toast('Foto profil diperbarui!','success')};reader.readAsDataURL(file)}
+function refreshSettings(){if(!currentUser)return;document.getElementById('settings-name-display').textContent=currentUser.name}
+function editProfileName(){const n=prompt('Masukkan nama baru:',currentUser.name);if(n&&n.trim()){currentUser.name=n.trim();localStorage.setItem('bbk_user',JSON.stringify(currentUser));const users=JSON.parse(localStorage.getItem('bbk_users')||'[]');const idx=users.findIndex(u=>u.email===currentUser.email);if(idx>=0){users[idx].name=currentUser.name;localStorage.setItem('bbk_users',JSON.stringify(users))}refreshSettings();toast('Nama diperbarui!','success')}}
+function showChangePassword(){const f=document.getElementById('change-pass-form');f.style.display=f.style.display==='none'?'block':'none'}
+function changePassword(){const p=document.getElementById('new-pass').value,p2=document.getElementById('new-pass2').value;if(p.length<6){toast('Password minimal 6 karakter','error');return}if(p!==p2){toast('Password tidak cocok','error');return}currentUser.password=p;localStorage.setItem('bbk_user',JSON.stringify(currentUser));const users=JSON.parse(localStorage.getItem('bbk_users')||'[]');const idx=users.findIndex(u=>u.email===currentUser.email);if(idx>=0){users[idx].password=p;localStorage.setItem('bbk_users',JSON.stringify(users))}document.getElementById('change-pass-form').style.display='none';toast('Password berhasil diubah!','success')}
+function setPlanBilling(cycle,el){billingCycle=cycle;document.querySelectorAll('.plan-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');if(cycle==='yearly'){document.getElementById('premium-price-display').innerHTML='Rp 29.000 <span class="plan-period">/ bulan</span> <span style="font-size:11px;text-decoration:line-through;color:#94a3b8">Rp 49.000</span>';document.getElementById('pro-price-display').innerHTML='Rp 59.000 <span class="plan-period">/ bulan</span> <span style="font-size:11px;text-decoration:line-through;color:#94a3b8">Rp 99.000</span>'}else{document.getElementById('premium-price-display').innerHTML='Rp 49.000 <span class="plan-period">/ bulan</span>';document.getElementById('pro-price-display').innerHTML='Rp 99.000 <span class="plan-period">/ bulan</span>'}}
+function upgradePlan(plan){showLoading('Memproses Pembayaran...','Mohon tunggu sebentar');setTimeout(()=>{currentUser.status=plan;localStorage.setItem('bbk_user',JSON.stringify(currentUser));const users=JSON.parse(localStorage.getItem('bbk_users')||'[]');const idx=users.findIndex(u=>u.email===currentUser.email);if(idx>=0){users[idx].status=plan;localStorage.setItem('bbk_users',JSON.stringify(users))}hideLoading();toast(`Selamat! Kamu sekarang ${plan==='pro'?'🚀 Pro':'⭐ Premium'}!`,'success');setTimeout(()=>goTo('profile'),600)},2000)}
+</script>
 </body>
 </html>
