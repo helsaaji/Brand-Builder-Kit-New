@@ -39,14 +39,14 @@
   "screenshots": [
     {
       "src": "./icons/screenshot1.png",
-      "sizes": "1080x1920",
+      "sizes": "1442x3090",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "PWA Template — Tampilan Mobile"
     },
     {
       "src": "./icons/screenshot2.png",
-      "sizes": "1080x1920",
+      "sizes": "1442x3090",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "PWA Template — Tampilan Mobile 2"
