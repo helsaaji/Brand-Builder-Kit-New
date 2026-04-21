@@ -1,8 +1,17 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4A90E2">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192x192-A.png" type="image/png">
+<meta name="description" content="Buat brand profesional dengan mudah. Logo, warna, font, dan mockup otomatis untuk UMKM dan pemula.">
+<meta name="og:title" content="Brand Builder Kit">
+<meta name="og:description" content="Build Your Brand Easily">
 <title>Brand Builder Kit – Build Your Brand Easily</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -1671,6 +1680,15 @@ function upgradePlan(plan){
     if(idx>=0){users[idx].status=plan;localStorage.setItem('bbk_users',JSON.stringify(users))}
     hideLoading();toast(`Selamat! Kamu sekarang ${plan==='pro'?'🚀 Pro':'⭐ Premium'}!`,'success');setTimeout(()=>goTo('profile'),600);
   },2000);
+}
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js')
+      .then(reg => console.log('BBK SW registered:', reg.scope))
+      .catch(err => console.warn('SW gagal:', err));
+  });
 }
 </script>
 </body>
